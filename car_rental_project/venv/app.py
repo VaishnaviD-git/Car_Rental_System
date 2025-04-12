@@ -315,6 +315,186 @@ def update_feedback(ord_id):
     cur.close()
     return jsonify({'message': 'Feedback updated successfully'})
 
+@app.route('/feedbacks/<int:ord_id>', methods=['DELETE'])
+def delete_feedback(ord_id):
+    cur = mysql.connection.cursor()
+    cur.execute("DELETE FROM Feedbacks WHERE Ord_id = %s", (ord_id,))
+    mysql.connection.commit()
+    cur.close()
+    return jsonify({'message': 'Feedback deleted successfully'})
+
+@app.route('/feedbacks/<int:ord_id>', methods=['GET'])
+def get_feedback_by_id(ord_id):
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM Feedbacks WHERE Ord_id = %s", (ord_id,))
+    row = cur.fetchone()
+    columns = [desc[0] for desc in cur.description]
+    feedback = dict(zip(columns, row)) if row else None
+    cur.close()
+    return jsonify(feedback)
+
+
+# Subscriptions Table
+@app.route('/subscriptions', methods=['POST'])
+def add_subscription():
+    data = request.json
+    cur = mysql.connection.cursor()
+    cur.execute("""
+                INSERT INTO Subscriptions (Type, Benefits, Cus_id, Discounts)
+                VALUES (%s, %s, %s, %s)
+                """, (data['Type'], data['Benefits'], data['Cus_id'], data['Discounts']))
+    mysql.connection.commit()
+    cur.close()
+    return jsonify({'message': 'Subscription added successfully'})
+
+@app.route('/subscriptions', methods=['GET'])
+def get_subscriptions():
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM Subscriptions")
+    rows = cur.fetchall()
+    columns = [desc[0] for desc in cur.description]
+    subscriptions = [dict(zip(columns, row)) for row in rows]
+    cur.close()
+    return jsonify(subscriptions)
+
+@app.route('/subscriptions/<int:sub_id>', methods=['PUT'])
+def update_subscription(sub_id):
+    data = request.json
+    cur = mysql.connection.cursor()
+    cur.execute("""
+                UPDATE Subscriptions
+                SET Type = %s, Benefits = %s, Cus_id = %s, Discounts = %s
+                WHERE Sub_id = %s
+                """, (data['Type'], data['Benefits'], data['Cus_id'], data['Discounts'], sub_id))
+    mysql.connection.commit()
+    cur.close()
+    return jsonify({'message': 'Subscription updated successfully'})
+
+@app.route('/subscriptions/<int:sub_id>', methods=['DELETE'])
+def delete_subscription(sub_id):
+    cur = mysql.connection.cursor()
+    cur.execute("DELETE FROM Subscriptions WHERE Sub_id = %s", (sub_id,))
+    mysql.connection.commit()
+    cur.close()
+    return jsonify({'message': 'Subscription deleted successfully'})
+
+@app.route('/subscriptions/<int:sub_id>', methods=['GET'])
+def get_subscription_by_id(sub_id):
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM Subscriptions WHERE Sub_id = %s", (sub_id,))
+    row = cur.fetchone()
+    columns = [desc[0] for desc in cur.description]
+    subscription = dict(zip(columns, row)) if row else None
+    cur.close()
+    return jsonify(subscription)
+
+# ExtraCharges Table
+@app.route('/extra_charges', methods=['POST'])
+def add_extra_charge():
+    data = request.json
+    cur = mysql.connection.cursor()
+    cur.execute("""
+                INSERT INTO ExtraCharges (Ord_id, Re_id, Amount, Reason)
+                VALUES (%s, %s, %s, %s)
+                """, (data['Ord_id'], data['Re_id'], data['Amount'], data['Reason']))
+    mysql.connection.commit()
+    cur.close()
+    return jsonify({'message': 'Extra charge added successfully'})
+
+@app.route('/extra_charges', methods=['GET'])
+def get_extra_charges():
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM ExtraCharges")
+    rows = cur.fetchall()
+    columns = [desc[0] for desc in cur.description]
+    extra_charges = [dict(zip(columns, row)) for row in rows]
+    cur.close()
+    return jsonify(extra_charges)
+
+@app.route('/extra_charges/<int:ord_id>', methods=['PUT'])
+def update_extra_charge(ord_id):
+    data = request.json
+    cur = mysql.connection.cursor()
+    cur.execute("UPDATE ExtraCharges SET Amount = %s, Reason = %s WHERE Ord_id = %s", 
+                (data['Amount'], data['Reason'], ord_id))
+    mysql.connection.commit()
+    cur.close()
+    return jsonify({'message': 'Extra charge updated successfully'})
+
+@app.route('/extra_charges/<int:ord_id>', methods=['DELETE'])
+def delete_extra_charge(ord_id):
+    cur = mysql.connection.cursor()
+    cur.execute("DELETE FROM ExtraCharges WHERE Ord_id = %s", (ord_id,))
+    mysql.connection.commit()
+    cur.close()
+    return jsonify({'message': 'Extra charge deleted successfully'})
+
+@app.route('/extra_charges/<int:ord_id>', methods=['GET'])
+def get_extra_charge(ord_id):
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM ExtraCharges WHERE Ord_id = %s", (ord_id,))
+    row = cur.fetchone()
+    if row:
+        columns = [desc[0] for desc in cur.description]
+        extra_charge = dict(zip(columns, row))
+    else:
+        extra_charge = None
+    cur.close()
+    return jsonify(extra_charge)
+
+# Payments Table
+@app.route('/payments', methods=['POST'])
+def add_payment():
+    data = request.json
+    cur = mysql.connection.cursor()
+    cur.execute("""
+                INSERT INTO Payments (TransactionId, Cus_id, Discounts, Extra)
+                VALUES (%s, %s, %s, %s)
+                """, (data['TransactionId'], data['Cus_id'], data['Discounts'], data['Extra']))
+    mysql.connection.commit()
+    cur.close()
+    return jsonify({'message': 'Payment added successfully'})
+
+@app.route('/payments', methods=['GET'])
+def get_payments():
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM Payments")
+    rows = cur.fetchall()
+    columns = [desc[0] for desc in cur.description]
+    payments = [dict(zip(columns, row)) for row in rows]
+    cur.close()
+    return jsonify(payments)
+
+@app.route('/payments/<int:transaction_id>', methods=['PUT'])
+def update_payment(transaction_id):
+    data = request.json
+    cur = mysql.connection.cursor()
+    cur.execute("""
+                UPDATE Payments
+                SET Cus_id = %s, Discounts = %s, Extra = %s
+                WHERE TransactionId = %s
+                """, (data['Cus_id'], data['Discounts'], data['Extra'], transaction_id))
+    mysql.connection.commit()
+    cur.close()
+    return jsonify({'message': 'Payment updated successfully'})
+
+@app.route('/payments/<int:transaction_id>', methods=['DELETE'])
+def delete_payment(transaction_id):
+    cur = mysql.connection.cursor()
+    cur.execute("DELETE FROM Payments WHERE TransactionId = %s", (transaction_id,))
+    mysql.connection.commit()
+    cur.close()
+    return jsonify({'message': 'Payment deleted successfully'})
+
+@app.route('/payments/<int:transaction_id>', methods=['GET'])
+def get_payment(transaction_id):
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM Payments WHERE TransactionId = %s", (transaction_id,))
+    row = cur.fetchone()
+    columns = [desc[0] for desc in cur.description]
+    payment = dict(zip(columns, row)) if row else None
+    cur.close()
+    return jsonify(payment)
 
 if __name__ == '__main__':
     app.run(debug=True)
