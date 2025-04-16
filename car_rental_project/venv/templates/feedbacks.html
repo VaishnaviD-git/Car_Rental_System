@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block title %}Feedbacks{% endblock %}
+{% block content %}
+<h2>Feedbacks</h2>
+<table border="1">
+    <tr>
+        <th>Order ID</th><th>Reservation ID</th><th>Info</th>
+    </tr>
+    {% for f in feedbacks %}
+    <tr>
+        <td>{{ f.Ord_id }}</td><td>{{ f.Res_id }}</td><td>{{ f.Info }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block title %}Rental Shops{% endblock %}
+{% block content %}
+<h2>Rental Shops</h2>
+<table border="1">
+    <tr>
+        <th>ID</th><th>Location</th><th>Ratings</th>
+    </tr>
+    {% for r in rental_shops %}
+    <tr>
+        <td>{{ r.Id }}</td><td>{{ r.Location }}</td><td>{{ r.Ratings }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

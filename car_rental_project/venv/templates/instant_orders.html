@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block title %}Instant Orders{% endblock %}
+{% block content %}
+<h2>Instant Orders</h2>
+<table border="1">
+    <tr>
+        <th>Order ID</th><th>Customer ID</th><th>Location</th><th>Time Slot</th><th>Vehicle ID</th>
+    </tr>
+    {% for o in instant_orders %}
+    <tr>
+        <td>{{ o.Ord_id }}</td><td>{{ o.Cus_id }}</td><td>{{ o.Location }}</td><td>{{ o.TimeSlot }}</td><td>{{ o.VehicleId }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

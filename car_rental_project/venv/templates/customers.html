@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block title %}Customers{% endblock %}
+{% block content %}
+<h2>Customers</h2>
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Aadhaar</th>
+        <th>Driving License</th>
+        <th>Address</th>
+        <th>Current Address</th>
+    </tr>
+    {% for customer in customers %}
+    <tr>
+        <td>{{ customer.Id }}</td>
+        <td>{{ customer.AdhaarNo }}</td>
+        <td>{{ customer.DrivingLicense }}</td>
+        <td>{{ customer.Adress }}</td>
+        <td>{{ customer.CurrentAddress }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

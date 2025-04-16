@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block title %}Subscriptions{% endblock %}
+{% block content %}
+<h2>Subscriptions</h2>
+<table border="1">
+    <tr>
+        <th>Type</th><th>Benefits</th><th>Customer ID</th><th>Discounts</th>
+    </tr>
+    {% for s in subscriptions %}
+    <tr>
+        <td>{{ s.Type }}</td><td>{{ s.Benefits }}</td><td>{{ s.Cus_id }}</td><td>{{ s.Discounts }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block title %}Customer Registration{% endblock %}
+{% block content %}
+<h2>Register as a Customer</h2>
+<form action="{{ url_for('register') }}" method="POST">
+    <label for="id">Customer ID:</label><br>
+    <input type="number" name="id" required><br><br>
+
+    <label for="adhaar">Aadhaar Number:</label><br>
+    <input type="text" name="adhaar" maxlength="12" required><br><br>
+
+    <label for="license">Driving License Number:</label><br>
+    <input type="text" name="license" required><br><br>
+
+    <label for="address">Permanent Address:</label><br>
+    <input type="text" name="address" required><br><br>
+
+    <label for="current_address">Current Address:</label><br>
+    <input type="text" name="current_address" required><br><br>
+
+    <button type="submit">Register</button>
+</form>
+
+{% if message %}
+<p style="color: green;">{{ message }}</p>
+{% endif %}
+{% if error %}
+<p style="color: red;">{{ error }}</p>
+{% endif %}
+{% endblock %}

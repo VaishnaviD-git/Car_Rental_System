@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block title %}Vehicles{% endblock %}
+{% block content %}
+<h2>Vehicles</h2>
+<table border="1">
+    <tr>
+        <th>Number Plate</th><th>Type</th><th>Model</th><th>Rental Shop ID</th>
+    </tr>
+    {% for v in vehicles %}
+    <tr>
+        <td>{{ v.NoPlate }}</td><td>{{ v.Type }}</td><td>{{ v.Model }}</td><td>{{ v.RentalId }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
