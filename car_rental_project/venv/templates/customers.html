@@ -1,23 +1,55 @@
-{% extends "layout.html" %}
-{% block title %}Customers{% endblock %}
-{% block content %}
-<h2>Customers</h2>
-<table border="1">
-    <tr>
-        <th>ID</th>
-        <th>Aadhaar</th>
-        <th>Driving License</th>
-        <th>Address</th>
-        <th>Current Address</th>
-    </tr>
-    {% for customer in customers %}
-    <tr>
-        <td>{{ customer.Id }}</td>
-        <td>{{ customer.AdhaarNo }}</td>
-        <td>{{ customer.DrivingLicense }}</td>
-        <td>{{ customer.Adress }}</td>
-        <td>{{ customer.CurrentAddress }}</td>
-    </tr>
-    {% endfor %}
-</table>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h1 {
+            margin-bottom: 40px;
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 220px;
+        }
+
+        .button-container a {
+            text-align: center;
+            padding: 15px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .button-container a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Welcome, Customer</h1>
+
+    <div class="button-container">
+        <a href="{{ url_for('book_reservation') }}">Book Reservation</a>
+        <a href="{{ url_for('instant_order') }}">Instant Order</a>
+    </div>
+
+</body>
+</html>

@@ -1,24 +1,88 @@
-{% extends "layout.html" %}
-{% block title %}Login{% endblock %}
-{% block content %}
-<h2>Login</h2>
-<form action="{{ url_for('login') }}" method="POST">
-    <label>Username (Aadhaar/Admin username):</label>
-    <input type="text" name="username" required><br><br>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
 
-    <label>Password (Driving License/Admin password):</label>
-    <input type="password" name="password" required><br><br>
+        form {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+            width: 300px;
+        }
 
-    <label>Login as:</label>
-    <select name="role">
-        <option value="customer">Customer</option>
-        <option value="admin">Admin</option>
-    </select><br><br>
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+        }
 
-    <button type="submit">Login</button>
-</form>
+        .button-pair {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 15px;
+        }
 
-{% if error %}
-<p style="color: red;">{{ error }}</p>
-{% endif %}
-{% endblock %}
+        .button-pair button {
+            flex: 1;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .button-pair button:hover {
+            background-color: #0056b3;
+        }
+
+        .error {
+            color: red;
+            margin-top: 15px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <form action="{{ url_for('login') }}" method="POST">
+        <h2>Login</h2>
+
+        <label for="username">Aadhaar / Admin Username:</label>
+        <input type="text" name="username" required>
+
+        <label for="password">DL / Admin Password:</label>
+        <input type="password" name="password" required>
+
+        <div class="button-pair">
+            <button type="submit" name="role" value="customer">Customer Login</button>
+            <button type="submit" name="role" value="admin">Admin Login</button>
+        </div>
+
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+    </form>
+
+</body>
+</html>

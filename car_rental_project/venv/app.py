@@ -1,8 +1,10 @@
-from flask import Flask, request, jsonify # type: ignore
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify # type: ignore
 from flask_mysqldb import MySQL # type: ignore
-from flask import render_template, request, redirect, url_for, session # type: ignore
 
 app = Flask(__name__)
+
+# ✅ Add this line right here!
+app.secret_key = '7yhuthu775hjhfh'  # Replace with any unique random string
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
@@ -10,6 +12,7 @@ app.config['MYSQL_PASSWORD'] = 'Vaishu&samu@05'
 app.config['MYSQL_DB'] = 'car_rental'
 
 mysql = MySQL(app)
+
 
 @app.route('/')
 def index():
@@ -19,37 +22,38 @@ def index():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
+
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        role = request.form['role']
+        role = request.form['role']  # 'admin' or 'customer'
 
         cur = mysql.connection.cursor()
 
         if role == 'admin':
-            cur.execute("SELECT * FROM Admins WHERE username = %s AND password = %s", (username, password))
+            cur.execute("SELECT * FROM Admin WHERE Username = %s AND Password = %s", (username, password))
             admin = cur.fetchone()
+            cur.close()
             if admin:
                 session['user'] = admin[0]
                 session['role'] = 'admin'
-                cur.close()
-                return redirect(url_for('view_rental_shops'))  # Admin dashboard
+                return render_template('admin.html')  # 👈 load admin.html
             else:
-                error = "Invalid admin credentials"
-        else:
+                error = "Invalid admin credentials."
+
+        elif role == 'customer':
             cur.execute("SELECT * FROM Customers WHERE AdhaarNo = %s AND DrivingLicense = %s", (username, password))
             customer = cur.fetchone()
+            cur.close()
             if customer:
                 session['user'] = customer[0]
                 session['role'] = 'customer'
-                cur.close()
-                return redirect(url_for('view_vehicles'))  # Customer dashboard
+                return render_template('customers.html', customers=[customer])  # 👈 load customer details
             else:
-                error = "Invalid customer credentials"
-
-        cur.close()
+                error = "Invalid customer credentials."
 
     return render_template("login.html", error=error)
+
 
 #Logout Page
 @app.route('/logout')
@@ -64,12 +68,10 @@ def register():
         id = request.form.get('id')
         adhaar = request.form.get('adhaar')
         license = request.form.get('license')
-        address = request.form.ge('address')
+        address = request.form.get('address')
         current_address = request.form.get('current_address')
 
         cur = mysql.connection.cursor()
-
-        # Check for duplicate Aadhaar or License
         cur.execute("SELECT * FROM Customers WHERE AdhaarNo = %s OR DrivingLicense = %s", (adhaar, license))
         existing = cur.fetchone()
 
@@ -84,10 +86,20 @@ def register():
         mysql.connection.commit()
         cur.close()
 
-        return render_template('register.html', message="Registration successful!")
+        # ✅ Redirect to login page
+        return redirect(url_for('login'))
     
     return render_template('register.html')
 
+# Route for reservation page
+@app.route('/reserve')
+def book_reservation():
+    return render_template('reservation.html')
+
+#Route for instant order page
+@app.route('/instant_order')
+def instant_order():
+    return render_template('instant_order.html')
 
 
 #Customers Table
