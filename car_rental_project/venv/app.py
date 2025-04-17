@@ -28,7 +28,7 @@ def login():
         password = request.form['password']
         role = request.form['role']  # 'admin' or 'customer'
 
-        cur = mysql.connection.cursor(
+        cur = mysql.connection.cursor()
 
         if role == 'admin':
             cur.execute("SELECT * FROM Admin WHERE Username = %s AND Password = %s", (username, password))
