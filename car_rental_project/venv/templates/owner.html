@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Owner Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h1 {
+            margin-bottom: 40px;
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 220px;
+        }
+
+        .button-container a {
+            text-align: center;
+            padding: 15px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .button-container a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Owner Dashboard</h1>
+
+    <div class="button-container">
+        <a href="{{ url_for('owner_customers') }}">Approve Customers</a>
+        <a href="{{ url_for('owner_vehicles') }}">Manage Vehicles</a>
+        <a href="{{ url_for('owner_edit') }}">Edit Shop Info</a>
+    </div>
+
+</body>
+</html>

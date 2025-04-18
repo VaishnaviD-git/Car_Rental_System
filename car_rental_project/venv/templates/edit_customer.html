@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Customer Info</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            padding: 50px;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 500px;
+            margin: auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            margin-top: 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+    </style>
+</head>
+<body>
+
+    <form method="POST">
+        <h2>Edit Your Information</h2>
+
+        <label for="adhaar_no">Aadhaar Number</label>
+        <input type="text" id="adhaar_no" name="adhaar_no" value="{{ customer[1] }}" required>
+
+        <label for="license">Driving License</label>
+        <input type="text" id="license" name="license" value="{{ customer[2] }}" required>
+
+        <label for="address">Permanent Address</label>
+        <textarea id="address" name="address" required>{{ customer[3] }}</textarea>
+
+        <button type="submit">Save Changes</button>
+    </form>
+
+</body>
+</html>

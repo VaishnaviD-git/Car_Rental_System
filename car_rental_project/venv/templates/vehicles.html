@@ -1,15 +1,71 @@
-{% extends "layout.html" %}
-{% block title %}Vehicles{% endblock %}
-{% block content %}
-<h2>Vehicles</h2>
-<table border="1">
-    <tr>
-        <th>Number Plate</th><th>Type</th><th>Model</th><th>Rental Shop ID</th>
-    </tr>
-    {% for v in vehicles %}
-    <tr>
-        <td>{{ v.NoPlate }}</td><td>{{ v.Type }}</td><td>{{ v.Model }}</td><td>{{ v.RentalId }}</td>
-    </tr>
-    {% endfor %}
-</table>
-{% endblock %}
+<!-- vehicles.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Vehicles</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .vehicle-list {
+            width: 80%;
+            margin-top: 20px;
+        }
+        .vehicle-item {
+            background-color: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .vehicle-item h3 {
+            margin: 0;
+        }
+        .vehicle-item p {
+            margin: 5px 0;
+        }
+        .vehicle-item button {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .vehicle-item button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Available Vehicles in {{ location }}</h2>
+    
+    <div class="vehicle-list">
+        {% for vehicle in vehicles %}
+        <div class="vehicle-item">
+            <h3>{{ vehicle[1] }} - {{ vehicle[2] }}</h3>
+            <p>Seats: {{ vehicle[3] }}</p>
+            <p>Rental Shop: {{ vehicle[4] }}</p>
+            <a href="{{ url_for('vehicle_info', vehicle_no=vehicle[0]) }}">
+                <button>Info</button>
+            </a>
+            <a href="{{ url_for('book_vehicle', vehicle_no=vehicle[0]) }}">
+                <button>Book</button>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+
+</body>
+</html>

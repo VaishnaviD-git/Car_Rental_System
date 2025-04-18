@@ -11,24 +11,43 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            height: 100vh;
+            padding: 40px 0;
         }
 
         h1 {
-            margin-bottom: 40px;
+            margin-bottom: 10px;
+        }
+
+        .top-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .top-buttons a {
+            text-align: center;
+            padding: 10px 14px;
+            background-color: #343a40;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .top-buttons a:hover {
+            background-color: #212529;
         }
 
         .button-container {
             display: flex;
-            flex-direction: column;
             gap: 20px;
-            width: 220px;
+            margin-bottom: 30px;
         }
 
         .button-container a {
             text-align: center;
-            padding: 15px;
+            padding: 12px 20px;
             background-color: #007bff;
             color: white;
             text-decoration: none;
@@ -40,16 +59,89 @@
         .button-container a:hover {
             background-color: #0056b3;
         }
+
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .delete-btn {
+            padding: 6px 12px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .delete-btn:hover {
+            background-color: darkred;
+        }
     </style>
 </head>
 <body>
 
-    <h1>Welcome, Customer</h1>
+    <h1>Welcome, {{ customer[1] }}</h1>
+
+    <div class="top-buttons">
+        <a href="{{ url_for('edit_customer') }}">Edit Info</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
 
     <div class="button-container">
-        <a href="{{ url_for('book_reservation') }}">Book Reservation</a>
+        <a href="{{ url_for('reservation') }}">Book Reservation</a>
         <a href="{{ url_for('instant_order') }}">Instant Order</a>
     </div>
+
+    <h2>Your Booked Vehicles</h2>
+    {% if vehicles %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Number Plate</th>
+                    <th>Type</th>
+                    <th>Model</th>
+                    <th>Seats</th>
+                    <th>Location</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for vehicle in vehicles %}
+                <tr>
+                    <td>{{ vehicle[0] }}</td>
+                    <td>{{ vehicle[1] }}</td>
+                    <td>{{ vehicle[2] }}</td>
+                    <td>{{ vehicle[3] }}</td>
+                    <td>{{ vehicle[4] }}</td>
+                    <td>
+                        <form method="post" action="{{ url_for('delete_booking', vehicle_no=vehicle[0]) }}">
+                            <button class="delete-btn" type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>You haven’t booked any vehicles yet.</p>
+    {% endif %}
 
 </body>
 </html>

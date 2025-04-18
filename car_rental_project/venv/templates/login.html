@@ -65,18 +65,18 @@
 </head>
 <body>
 
-    <form action="{{ url_for('login') }}" method="POST">
+    <form action="{{ url_for('login') }}" method="POST" autocomplete="off">
         <h2>Login</h2>
 
-        <label for="username">Aadhaar / Admin Username:</label>
-        <input type="text" name="username" required>
+        <label for="username">Aadhaar / Rental Id:</label>
+        <input type="text" name="username" required autocomplete="off">
 
-        <label for="password">DL / Admin Password:</label>
-        <input type="password" name="password" required>
+        <label for="password">DL / Rental Code:</label>
+        <input type="password" name="password" required autocomplete="off">
 
         <div class="button-pair">
             <button type="submit" name="role" value="customer">Customer Login</button>
-            <button type="submit" name="role" value="admin">Admin Login</button>
+            <button type="submit" name="role" value="owner">Owner Login</button>
         </div>
 
         {% if error %}

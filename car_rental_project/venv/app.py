@@ -1,5 +1,6 @@
-from flask import Flask, render_template, request, redirect, url_for, session, jsonify # type: ignore
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify,flash # type: ignore
 from flask_mysqldb import MySQL # type: ignore
+from datetime import datetime # type: ignore
 
 app = Flask(__name__)
 
@@ -26,39 +27,65 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        role = request.form['role']  # 'admin' or 'customer'
+        role = request.form['role']  # 'owner' or 'customer'
 
         cur = mysql.connection.cursor()
 
-        if role == 'admin':
-            cur.execute("SELECT * FROM Admin WHERE Username = %s AND Password = %s", (username, password))
-            admin = cur.fetchone()
-            cur.close()
-            if admin:
-                session['user'] = admin[0]
-                session['role'] = 'admin'
-                return render_template('admin.html')  # 👈 load admin.html
+        if role == 'owner':
+            cur.execute("SELECT * FROM rentalshops WHERE Id = %s AND Code = %s", (username, password))
+            owner = cur.fetchone()
+            if owner:
+                session['user'] = owner[0]  # This is owner ID
+                session['role'] = 'owner'
+                return render_template('owner.html')
             else:
-                error = "Invalid admin credentials."
+                error = "Invalid owner credentials."
 
         elif role == 'customer':
             cur.execute("SELECT * FROM Customers WHERE AdhaarNo = %s AND DrivingLicense = %s", (username, password))
             customer = cur.fetchone()
-            cur.close()
             if customer:
-                session['user'] = customer[0]
+                session['user'] = customer[0]  # This is customer ID
                 session['role'] = 'customer'
-                return render_template('customers.html', customers=[customer])  # 👈 load customer details
+                return redirect(url_for('customers'))
             else:
                 error = "Invalid customer credentials."
 
     return render_template("login.html", error=error)
 
+@app.route('/customers')
+def customers():
+    if 'user' not in session or session.get('role') != 'customer':
+        return redirect(url_for('login'))
+
+    cus_id = session['user']
+    cursor = mysql.connection.cursor()
+
+    # Get customer data
+    cursor.execute("SELECT * FROM customers WHERE Id = %s", (cus_id,))
+    customer = cursor.fetchone()
+
+    # Get booked vehicle data with rental shop location
+    cursor.execute("""
+        SELECT v.NoPlate, v.Type, v.Model, v.Seats, r.Location 
+        FROM vehicles v 
+        JOIN rentalshops r ON v.RentalId = r.Id 
+        WHERE v.Cus_id = %s
+    """, (cus_id,))
+    vehicles = cursor.fetchall()
+
+    cursor.close()
+    return render_template('customers.html', customer=customer, vehicles=vehicles)
+
 
 #Logout Page
 @app.route('/logout')
 def logout():
+    if 'user' not in session or session.get('role') != 'customer':
+        flash("Please log in as a customer to view this page.", 'error')
+        return redirect(url_for('login'))
     session.clear()
+    flash("Logged out successfully.", "success")
     return redirect(url_for('login'))
 
 #Register Page
@@ -69,7 +96,6 @@ def register():
         adhaar = request.form.get('adhaar')
         license = request.form.get('license')
         address = request.form.get('address')
-        current_address = request.form.get('current_address')
 
         cur = mysql.connection.cursor()
         cur.execute("SELECT * FROM Customers WHERE AdhaarNo = %s OR DrivingLicense = %s", (adhaar, license))
@@ -80,9 +106,9 @@ def register():
             return render_template('register.html', error="Aadhaar or License already exists.")
 
         cur.execute("""
-            INSERT INTO Customers (Id, AdhaarNo, DrivingLicense, Adress, CurrentAddress)
-            VALUES (%s, %s, %s, %s, %s)
-        """, (id, adhaar, license, address, current_address))
+            INSERT INTO Customers (Id, AdhaarNo, DrivingLicense, Address)
+            VALUES (%s, %s, %s, %s)
+        """, (id, adhaar, license, address))
         mysql.connection.commit()
         cur.close()
 
@@ -91,115 +117,170 @@ def register():
     
     return render_template('register.html')
 
-# Route for reservation page
-@app.route('/reserve')
-def book_reservation():
+@app.route('/reservation', methods=['GET', 'POST'])
+def reservation():
+    # Only allow customers to reserve
+    if 'user' not in session or session.get('role') != 'customer':
+        flash("Please log in as a customer to make a reservation.", 'error')
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        customer_id = session['user']  # Get customer ID from session
+        from_date = request.form['from_date']
+        to_date = request.form['to_date']
+        location = request.form['location']
+        time_slot = request.form['time_slot']
+
+        # Validate date logic
+        if datetime.strptime(from_date, '%Y-%m-%d') >= datetime.strptime(to_date, '%Y-%m-%d'):
+            flash("From Date must be less than To Date.", 'error')
+            return redirect(url_for('reservation'))
+
+        # Insert reservation
+        cur = mysql.connection.cursor()
+        cur.execute("""
+            INSERT INTO reservation (Cus_id, FromDate, ToDate, Location, TimeSlot)
+            VALUES (%s, %s, %s, %s, %s)
+        """, (customer_id, from_date, to_date, location, time_slot))
+        mysql.connection.commit()
+        cur.close()
+
+        flash("Reservation successful!", 'success')
+        return redirect(url_for('vehicles', location=location))
+
     return render_template('reservation.html')
 
-#Route for instant order page
-@app.route('/instant_order')
+
+
+@app.route('/vehicles', methods=['GET'])
+def vehicles():
+    location = request.args.get('location')
+    if 'user' not in session or session.get('role') != 'customer':
+        flash("Please log in as a customer to view this page.", 'error')
+        return redirect(url_for('login'))
+    # Get available vehicles based on location and check if they are booked
+    cursor = mysql.connection.cursor()
+    cursor.execute("""
+        SELECT v.NoPlate, v.Type, v.Model, v.Seats, r.Name AS RentalName
+        FROM vehicles v
+        JOIN rentalshops r ON v.RentalId = r.Id
+        WHERE r.Location = %s AND v.Cus_id IS NULL
+    """, (location,))
+    available_vehicles = cursor.fetchall()
+    cursor.close()
+
+    return render_template('vehicles.html', vehicles=available_vehicles, location=location)
+
+@app.route('/book_vehicle/<vehicle_no>', methods=['GET'])
+def book_vehicle(vehicle_no):
+    if 'user' not in session or session.get('role') != 'customer':
+        flash("You must be logged in as a customer to book a vehicle.", 'error')
+        return redirect(url_for('login'))
+
+    cus_id = session['user']  # Customer ID from session
+
+    # Update the vehicle to assign it to the customer
+    cursor = mysql.connection.cursor()
+    cursor.execute("UPDATE vehicles SET Cus_id = %s WHERE NoPlate = %s", (cus_id, vehicle_no))
+    mysql.connection.commit()
+    cursor.close()
+
+    # Redirect to "your_info" page after booking
+    return redirect(url_for('customers'))  # Redirect to customers page
+  # Redirect back to vehicles page
+
+@app.route('/vehicle_info/<vehicle_no>', methods=['GET'])
+def vehicle_info(vehicle_no):
+    # Fetch vehicle details along with the rental shop information
+    if 'user' not in session or session.get('role') != 'customer':
+        flash("Please log in as a customer to view this page.", 'error')
+        return redirect(url_for('login'))
+    cursor = mysql.connection.cursor()
+    cursor.execute("""
+        SELECT v.NoPlate, v.Type, v.Model, v.Seats, r.Name AS RentalName, r.Location AS RentalLocation
+        FROM vehicles v
+        JOIN rentalshops r ON v.RentalId = r.Id
+        WHERE v.NoPlate = %s
+    """, (vehicle_no,))
+    vehicle_info = cursor.fetchone()
+    cursor.close()
+
+    if vehicle_info:
+        return render_template('vehicle_info.html', vehicle_info=vehicle_info)
+    else:
+        return "Vehicle not found", 404
+
+@app.route('/edit_customer', methods=['GET', 'POST'])
+def edit_customer():
+    if 'user' not in session or session.get('role') != 'customer':
+        flash("Please log in as a customer to view this page.", 'error')
+        return redirect(url_for('login'))
+    cus_id = session['user']
+    cursor = mysql.connection.cursor()
+
+    if request.method == 'POST':
+        adhaar_no = request.form['adhaar_no']
+        license = request.form['license']
+        address = request.form['address']
+
+        cursor.execute("""
+            UPDATE customers
+            SET AdhaarNo = %s, DrivingLicense = %s, Address = %s
+            WHERE Id = %s
+        """, (adhaar_no, license, address, cus_id))
+        mysql.connection.commit()
+        cursor.execute("SELECT * FROM vehicles WHERE Cus_id = %s", (cus_id,))
+        booked_vehicles = cursor.fetchall()
+        cursor.execute("SELECT * FROM Customers WHERE Id = %s", (cus_id,))
+        customer = cursor.fetchone()
+        cursor.close()
+        flash("Information updated successfully!", 'success')
+        return render_template('customers.html', customer=customer, vehicles=booked_vehicles)
+
+    # GET request: show current customer info
+    cursor.execute("SELECT * FROM customers WHERE Id = %s", (cus_id,))
+    customer = cursor.fetchone()
+    cursor.close()
+
+    return render_template('edit_customer.html', customer=customer)
+
+@app.route('/instant_order', methods=['GET', 'POST'])
 def instant_order():
-    return render_template('instant_order.html')
+    if 'user' not in session or session.get('role') != 'customer':
+        flash("Please log in to place an instant order.", 'error')
+        return redirect(url_for('login'))
 
+    if request.method == 'POST':
+        location = request.form['location']
+        time_slot = request.form['time_slot']
+        cus_id = session['user']
 
-#Customers Table
-@app.route('/view/customers') # Get all customers
-def get_customers():
-    cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM Customers")
-    rows = cur.fetchall()
-    columns = [desc[0] for desc in cur.description]
-    customers = [dict(zip(columns, row)) for row in rows]
-    cur.close()
-    return render_template('customers.html', customers=customers)
+        cursor = mysql.connection.cursor()
+        cursor.execute("""
+            INSERT INTO instantorders (Cus_id, Location, TimeSlot)
+            VALUES (%s, %s, %s)
+        """, (cus_id, location, time_slot))
+        mysql.connection.commit()
+        cursor.close()
 
-#RentalShops Table
-@app.route('/view/rental_shops') # Get all Rental Shops
-def get_rental_shops():
-    cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM RentalShops")
-    rows = cur.fetchall()
-    columns = [desc[0] for desc in cur.description]
-    rentalshops = [dict(zip(columns, row)) for row in rows]
-    cur.close()
-    return render_template('rental_shops.html', rental_shops=rentalshops)
+        return redirect(url_for('vehicles', location=location))
 
-#Vehicles Table
-@app.route('/view/vehicles') # Get all Vehicles
-def get_vehicles():
-    cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM Vehicles")
-    rows = cur.fetchall()
-    columns = [desc[0] for desc in cur.description]
-    vehicles = [dict(zip(columns, row)) for row in rows]
-    cur.close()
-    return render_template('vehicles.html', vehicles=vehicles)
+    return render_template('instant_orders.html')
 
-#Reservations Table
-@app.route('/view/reservations') # Get all Reservations
-def get_reservations():
-    cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM Reservation")
-    rows = cur.fetchall()
-    columns = [desc[0] for desc in cur.description]
-    reservations = [dict(zip(columns, row)) for row in rows]
-    cur.close()
-    return render_template('reservations.html', reservations=reservations)
+@app.route('/delete_booking/<vehicle_no>', methods=['POST'])
+def delete_booking(vehicle_no):
+    if 'user' not in session or session.get('role') != 'customer':
+        return redirect(url_for('login'))
 
-#Instant Orders Table
-@app.route('/view/instant_orders') # Get all Instant Orders
-def get_instant_orders():
-    cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM InstantOrders")
-    rows = cur.fetchall()
-    columns = [desc[0] for desc in cur.description]
-    instant_orders = [dict(zip(columns, row)) for row in rows]
-    cur.close()
-    return render_template('instant_orders.html', instant_orders=instant_orders)
+    cus_id = session['user']
+    cursor = mysql.connection.cursor()
 
-#Feedback Table
-@app.route('/view/feedbacks') # Get all Feedbacks
-def get_feedbacks():
-    cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM Feedbacks")
-    rows = cur.fetchall()
-    columns = [desc[0] for desc in cur.description]
-    feedbacks = [dict(zip(columns, row)) for row in rows]
-    cur.close()
-    return render_template('feedbacks.html', feedbacks=feedbacks) 
+    # Only allow the logged-in customer to delete their own bookings
+    cursor.execute("UPDATE vehicles SET Cus_id = NULL WHERE NoPlate = %s AND Cus_id = %s", (vehicle_no, cus_id))
+    mysql.connection.commit()
+    cursor.close()
 
-# Subscriptions Table
-@app.route('/view/subscriptions') # Get all Subscriptions
-def get_subscriptions():
-    cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM Subscriptions")
-    rows = cur.fetchall()
-    columns = [desc[0] for desc in cur.description]
-    subscriptions = [dict(zip(columns, row)) for row in rows]
-    cur.close()
-    return render_template('subscriptions.html', subscriptions=subscriptions)
-
-# ExtraCharges Table
-@app.route('/view/extra_charges') # Get all Extra Charges
-def get_extra_charges():
-    cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM ExtraCharges")
-    rows = cur.fetchall()
-    columns = [desc[0] for desc in cur.description]
-    extra_charges = [dict(zip(columns, row)) for row in rows]
-    cur.close()
-    return render_template('extra_charges.html', extra_charges=extra_charges)
-
-# Payments Table
-@app.route('/view/payments') # Get all Payments
-def get_payments():
-    cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM Payments")
-    rows = cur.fetchall()
-    columns = [desc[0] for desc in cur.description]
-    payments = [dict(zip(columns, row)) for row in rows]
-    cur.close()
-    return render_template('payments.html', payments=payments)
+    return redirect(url_for('customers'))
 
 if __name__ == '__main__':
     app.run(debug=True)
