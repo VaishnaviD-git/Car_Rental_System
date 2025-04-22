@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Rental Shop</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eef2f3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 50px;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+        }
+
+        form {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 400px;
+        }
+
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        button {
+            margin-top: 25px;
+            padding: 12px;
+            width: 100%;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .back-link {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .back-link a {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Edit Rental Shop Info</h1>
+
+    <form method="POST">
+        <label for="name">Shop Name:</label>
+        <input type="text" name="name" id="name" value="{{ shop[1] }}" required>
+
+        <label for="location">Location:</label>
+        <input type="text" name="location" id="location" value="{{ shop[2] }}" required>
+
+        <label for="no_of_vehicles">No. of Vehicles:</label>
+        <input type="number" name="no_of_vehicles" id="no_of_vehicles" value="{{ shop[3] }}" required>
+
+        <label for="ratings">Ratings:</label>
+        <input type="number" name="ratings" id="ratings" value="{{ shop[4] or 0 }}" min="0" max="5" step="1">
+
+        <button type="submit">Save Changes</button>
+    </form>
+
+    <div class="back-link">
+        <a href="{{ url_for('rental_shop') }}">← Back to Dashboard</a>
+    </div>
+
+</body>
+</html>

@@ -37,7 +37,7 @@ def login():
             if owner:
                 session['user'] = owner[0]  # This is owner ID
                 session['role'] = 'owner'
-                return render_template('owner.html')
+                return redirect(url_for('rentalshops'))
             else:
                 error = "Invalid owner credentials."
 
@@ -93,6 +93,7 @@ def logout():
 def register():
     if request.method == 'POST':
         id = request.form.get('id')
+        name = request.form.get('name')
         adhaar = request.form.get('adhaar')
         license = request.form.get('license')
         address = request.form.get('address')
@@ -106,9 +107,9 @@ def register():
             return render_template('register.html', error="Aadhaar or License already exists.")
 
         cur.execute("""
-            INSERT INTO Customers (Id, AdhaarNo, DrivingLicense, Address)
-            VALUES (%s, %s, %s, %s)
-        """, (id, adhaar, license, address))
+            INSERT INTO Customers (Id, Name, AdhaarNo, DrivingLicense, Address)
+            VALUES (%s, %s, %s, %s, %s)
+        """, (id, name, adhaar, license, address))
         mysql.connection.commit()
         cur.close()
 
@@ -281,6 +282,145 @@ def delete_booking(vehicle_no):
     cursor.close()
 
     return redirect(url_for('customers'))
+
+@app.route('/vehicles_owner')
+def vehicles_owner():
+    if 'user' not in session or session.get('role') != 'rental_shop':
+        flash("Please log in as a rental shop to view your vehicles.", 'error')
+        return redirect(url_for('login'))
+
+    shop_id = session['user']
+    cursor = mysql.connection.cursor()
+    
+    query = """
+        SELECT V.NoPlate, V.Type, V.Model, V.Seats, S.Name, S.Location
+        FROM vehicles V
+        JOIN rentalshops S ON V.RentalId = S.Id
+        WHERE V.RentalId = %s
+    """
+    cursor.execute(query, (shop_id,))
+    vehicles = cursor.fetchall()
+    cursor.close()
+
+    return render_template('vehicles_shop.html', vehicles=vehicles)
+
+# DELETE vehicle
+@app.route('/delete_vehicle/<number_plate>', methods=['POST'])
+def delete_vehicle(number_plate):
+    if 'user' not in session or session.get('role') != 'rental_shop':
+        return redirect(url_for('login'))
+    
+    cursor = mysql.connection.cursor()
+    cursor.execute("DELETE FROM vehicles WHERE NoPlate = %s AND RentalId = %s", (number_plate, session['user']))
+    mysql.connection.commit()
+    cursor.close()
+    flash("Vehicle deleted successfully.", "success")
+    return redirect(url_for('vehicles_owner'))
+
+
+# EDIT vehicle form + update
+@app.route('/edit_vehicle/<number_plate>', methods=['GET', 'POST'])
+def edit_vehicle(number_plate):
+    if 'user' not in session or session.get('role') != 'rental_shop':
+        return redirect(url_for('login'))
+
+    cursor = mysql.connection.cursor()
+    
+    if request.method == 'POST':
+        vtype = request.form['type']
+        model = request.form['model']
+        seats = request.form['seats']
+        
+        cursor.execute("""
+            UPDATE vehicles 
+            SET Type = %s, Model = %s, Seats = %s
+            WHERE NoPlate = %s AND RentalId = %s
+        """, (vtype, model, seats, number_plate, session['user']))
+        
+        mysql.connection.commit()
+        cursor.close()
+        flash("Vehicle updated successfully.", "success")
+        return redirect(url_for('vehicles_owner'))
+    
+    # GET request: load vehicle data
+    cursor.execute("""
+        SELECT NoPlate, Type, Model, Seats 
+        FROM vehicles 
+        WHERE NoPlate = %s AND RentalId = %s
+    """, (number_plate, session['user']))
+    vehicle = cursor.fetchone()
+    cursor.close()
+    
+    return render_template('edit_vehicle.html', vehicle=vehicle)
+
+@app.route('/customers_owner')
+def customers_owner():
+    if 'user' not in session or session.get('role') != 'rental_shop':
+        return redirect(url_for('login'))
+
+    rental_id = session['user']
+    cursor = mysql.connection.cursor()
+
+    # Get customers from vehicles (Reservations)
+    cursor.execute("""
+        SELECT DISTINCT c.Id, c.Name, c.AdhaarNo, c.DrivingLicense, c.Address
+        FROM customers c
+        JOIN vehicles v ON c.Id = v.Cus_id
+        WHERE v.RentalId = %s AND v.Cus_id IS NOT NULL
+    """, (rental_id,))
+    reservation_customers = cursor.fetchall()
+
+    # Get customers from instantorders
+    cursor.execute("""
+        SELECT DISTINCT c.Id, c.Name, c.AdhaarNo, c.DrivingLicense, c.Address
+        FROM customers c
+        JOIN instantorders i ON c.Id = i.Cus_id
+        WHERE i.Location = (
+            SELECT Location FROM rentalshops WHERE Id = %s
+        )
+    """, (rental_id,))
+    order_customers = cursor.fetchall()
+
+    # Combine both sets without duplicates using IDs
+    customer_dict = {}
+    for customer in reservation_customers + order_customers:
+        customer_dict[customer[0]] = customer  # key: Id
+
+    customers = list(customer_dict.values())
+
+    cursor.close()
+    return render_template("customers_owner.html", customers=customers)
+
+@app.route('/owner_edit', methods=['GET', 'POST'])
+def owner_edit():
+    if 'user' not in session or session.get('role') != 'rental_shop':
+        return redirect(url_for('login'))
+
+    rental_id = session['user']
+    cursor = mysql.connection.cursor()
+
+    if request.method == 'POST':
+        name = request.form['name']
+        location = request.form['location']
+        no_of_vehicles = request.form['no_of_vehicles']
+        ratings = request.form['ratings']
+
+        cursor.execute("""
+            UPDATE rentalshops 
+            SET Name = %s, Location = %s, No_Of_Vehicles = %s, Ratings = %s 
+            WHERE Id = %s
+        """, (name, location, no_of_vehicles, ratings, rental_id))
+        mysql.connection.commit()
+        flash("Shop details updated successfully!", "success")
+        return redirect(url_for('rental_shop'))
+
+    # GET: fetch existing data
+    cursor.execute("SELECT Id, Name, Location, No_Of_Vehicles, Ratings FROM rentalshops WHERE Id = %s", (rental_id,))
+    shop = cursor.fetchone()
+    cursor.close()
+    return render_template("owner_edit.html", shop=shop)
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Vehicle</title>
+</head>
+<body>
+    <h2>Edit Vehicle Details</h2>
+    <form method="POST">
+        <label>Type:</label>
+        <input type="text" name="type" value="{{ vehicle[1] }}" required><br>
+        <label>Model:</label>
+        <input type="text" name="model" value="{{ vehicle[2] }}" required><br>
+        <label>Seats:</label>
+        <input type="number" name="seats" value="{{ vehicle[3] }}" required><br>
+        <button type="submit">Update</button>
+    </form>
+</body>
+</html>

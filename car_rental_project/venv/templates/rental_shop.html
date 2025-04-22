@@ -1,18 +1,20 @@
+<!-- rental_shop.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Owner Dashboard</title>
+    <title>Rental Shop Dashboard</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
+            background-color: #f4f4f4;
             color: #333;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
+            margin: 0;
         }
 
         h1 {
@@ -21,18 +23,16 @@
 
         .button-container {
             display: flex;
-            flex-direction: column;
-            gap: 20px;
-            width: 220px;
+            gap: 40px;
         }
 
         .button-container a {
-            text-align: center;
-            padding: 15px;
+            padding: 20px 40px;
             background-color: #007bff;
             color: white;
             text-decoration: none;
-            border-radius: 8px;
+            border-radius: 10px;
+            font-size: 1.2em;
             font-weight: bold;
             transition: background-color 0.3s ease;
         }
@@ -44,11 +44,11 @@
 </head>
 <body>
 
-    <h1>Owner Dashboard</h1>
+    <h1>Rental Shop Dashboard</h1>
 
     <div class="button-container">
-        <a href="{{ url_for('owner_customers') }}">Approve Customers</a>
-        <a href="{{ url_for('owner_vehicles') }}">Manage Vehicles</a>
+        <a href="{{ url_for('vehicles_owner') }}">Vehicles</a>
+        <a href="{{ url_for('customers_owner') }}">Customers</a>
         <a href="{{ url_for('owner_edit') }}">Edit Shop Info</a>
     </div>
 
