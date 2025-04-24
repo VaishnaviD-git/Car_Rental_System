@@ -37,7 +37,7 @@ def login():
             if owner:
                 session['user'] = owner[0]  # This is owner ID
                 session['role'] = 'owner'
-                return redirect(url_for('rentalshops'))
+                return render_template('rental_shop.html',)
             else:
                 error = "Invalid owner credentials."
 
