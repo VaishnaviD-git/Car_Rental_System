@@ -54,14 +54,17 @@
     <form method="POST">
         <h2>Edit Your Information</h2>
 
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" value="{{ customer[1] }}" required>
+
         <label for="adhaar_no">Aadhaar Number</label>
-        <input type="text" id="adhaar_no" name="adhaar_no" value="{{ customer[1] }}" required>
+        <input type="text" id="adhaar_no" name="adhaar_no" value="{{ customer[2] }}" required>
 
         <label for="license">Driving License</label>
-        <input type="text" id="license" name="license" value="{{ customer[2] }}" required>
+        <input type="text" id="license" name="license" value="{{ customer[3] }}" required>
 
         <label for="address">Permanent Address</label>
-        <textarea id="address" name="address" required>{{ customer[3] }}</textarea>
+        <textarea id="address" name="address" required>{{ customer[4] }}</textarea>
 
         <button type="submit">Save Changes</button>
     </form>

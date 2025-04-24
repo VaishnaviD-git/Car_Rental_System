@@ -220,15 +220,16 @@ def edit_customer():
     cursor = mysql.connection.cursor()
 
     if request.method == 'POST':
+        name = request.form['name']
         adhaar_no = request.form['adhaar_no']
         license = request.form['license']
         address = request.form['address']
 
         cursor.execute("""
             UPDATE customers
-            SET AdhaarNo = %s, DrivingLicense = %s, Address = %s
+            SET Name = %s, AdhaarNo = %s, DrivingLicense = %s, Address = %s
             WHERE Id = %s
-        """, (adhaar_no, license, address, cus_id))
+        """, (name, adhaar_no, license, address, cus_id))
         mysql.connection.commit()
         cursor.execute("SELECT * FROM vehicles WHERE Cus_id = %s", (cus_id,))
         booked_vehicles = cursor.fetchall()
