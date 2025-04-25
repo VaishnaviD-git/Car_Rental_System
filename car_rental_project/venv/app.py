@@ -36,8 +36,8 @@ def login():
             owner = cur.fetchone()
             if owner:
                 session['user'] = owner[0]  # This is owner ID
-                session['role'] = 'owner'
-                return render_template('rental_shop.html',)
+                session['role'] = 'rental_shop'
+                return redirect('rental_shops')
             else:
                 error = "Invalid owner credentials."
 
@@ -52,6 +52,12 @@ def login():
                 error = "Invalid customer credentials."
 
     return render_template("login.html", error=error)
+
+@app.route('/rental_shops')
+def rental_shops():
+    if 'user' not in session or session.get('role') != 'rental_shop':
+        return redirect(url_for('login'))
+    return render_template('rental_shop.html')
 
 @app.route('/customers')
 def customers():
@@ -412,8 +418,7 @@ def owner_edit():
             WHERE Id = %s
         """, (name, location, no_of_vehicles, ratings, rental_id))
         mysql.connection.commit()
-        flash("Shop details updated successfully!", "success")
-        return redirect(url_for('rental_shop'))
+        return render_template('rental_shop.html')
 
     # GET: fetch existing data
     cursor.execute("SELECT Id, Name, Location, No_Of_Vehicles, Ratings FROM rentalshops WHERE Id = %s", (rental_id,))
