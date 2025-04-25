@@ -62,26 +62,31 @@ def rental_shops():
 @app.route('/customers')
 def customers():
     if 'user' not in session or session.get('role') != 'customer':
+        flash("Login as a customer to view your dashboard.", 'error')
         return redirect(url_for('login'))
 
     cus_id = session['user']
     cursor = mysql.connection.cursor()
-
-    # Get customer data
     cursor.execute("SELECT * FROM customers WHERE Id = %s", (cus_id,))
     customer = cursor.fetchone()
 
-    # Get booked vehicle data with rental shop location
     cursor.execute("""
-        SELECT v.NoPlate, v.Type, v.Model, v.Seats, r.Location 
-        FROM vehicles v 
-        JOIN rentalshops r ON v.RentalId = r.Id 
-        WHERE v.Cus_id = %s
+        SELECT Re_id, Location, FromDate, ToDate, TimeSlot, VehicleNo 
+        FROM reservation WHERE Cus_id = %s
     """, (cus_id,))
-    vehicles = cursor.fetchall()
+    reservations = cursor.fetchall()
 
+    cursor.execute("""
+        SELECT Ord_id, Location, TimeSlot, VehicleNo 
+        FROM instantorders WHERE Cus_id = %s
+    """, (cus_id,))
+    instant_orders = cursor.fetchall()
     cursor.close()
-    return render_template('customers.html', customer=customer, vehicles=vehicles)
+
+    return render_template('customers.html', customer=customer,
+                           reservations=reservations,
+                           instant_orders=instant_orders)
+
 
 
 #Logout Page
@@ -184,17 +189,39 @@ def book_vehicle(vehicle_no):
         flash("You must be logged in as a customer to book a vehicle.", 'error')
         return redirect(url_for('login'))
 
-    cus_id = session['user']  # Customer ID from session
-
-    # Update the vehicle to assign it to the customer
+    cus_id = session['user']
     cursor = mysql.connection.cursor()
-    cursor.execute("UPDATE vehicles SET Cus_id = %s WHERE NoPlate = %s", (cus_id, vehicle_no))
+
+    # Check if customer has a reservation without vehicle
+    cursor.execute("""
+        SELECT Re_id FROM reservation 
+        WHERE Cus_id = %s AND VehicleNo IS NULL 
+        ORDER BY Re_id DESC LIMIT 1
+    """, (cus_id,))
+    res = cursor.fetchone()
+
+    if res:
+        cursor.execute("UPDATE reservation SET VehicleNo = %s WHERE Re_id = %s", (vehicle_no, res[0]))
+        cursor.execute("UPDATE vehicles SET Cus_id = %s where NoPlate = %s",(cus_id, vehicle_no))
+    else:
+        # If no reservation, check for pending instant order
+        cursor.execute("""
+            SELECT Ord_id FROM instantorders 
+            WHERE Cus_id = %s AND VehicleNo IS NULL 
+            ORDER BY Ord_id DESC LIMIT 1
+        """, (cus_id,))
+        order = cursor.fetchone()
+        if order:
+            cursor.execute("UPDATE instantorders SET VehicleNo = %s WHERE Ord_id = %s", (vehicle_no, order[0]))
+            cursor.execute("UPDATE vehicles SET Cus_id = %s where NoPlate = %s",(cus_id, vehicle_no))
+        else:
+            cursor.close()
+            return redirect(url_for('customers'))
+
     mysql.connection.commit()
     cursor.close()
+    return redirect(url_for('customers'))
 
-    # Redirect to "your_info" page after booking
-    return redirect(url_for('customers'))  # Redirect to customers page
-  # Redirect back to vehicles page
 
 @app.route('/vehicle_info/<vehicle_no>', methods=['GET'])
 def vehicle_info(vehicle_no):
@@ -290,10 +317,72 @@ def delete_booking(vehicle_no):
 
     return redirect(url_for('customers'))
 
+@app.route('/reservation/<int:res_id>')
+def reservation_info(res_id):
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT * FROM reservation WHERE Re_id = %s", (res_id,))
+    data = cursor.fetchone()
+    cursor.close()
+    return render_template('reservation_info.html', data=data)
+
+@app.route('/instant_order/<int:ord_id>')
+def instant_order_info(ord_id):
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT * FROM instantorders WHERE Ord_id = %s", (ord_id,))
+    data = cursor.fetchone()
+    cursor.close()
+    return render_template('instant_order_info.html', data=data)
+
+@app.route('/delete_reservation/<int:res_id>', methods=['POST'])
+def delete_reservation(res_id):
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT * FROM reservation WHERE Re_id = %s",(res_id,))
+    vehicle_no = cursor.fetchone()
+    cursor.execute("UPDATE vehicles SET Cus_id = NULL WHERE NoPlate = %s",(vehicle_no[6],))
+    cursor.execute("DELETE FROM reservation WHERE Re_id = %s", (res_id,))
+    mysql.connection.commit()
+    cursor.close()
+    flash("Reservation deleted.", 'success')
+    return redirect(url_for('customers'))
+
+@app.route('/delete_instant_order/<int:ord_id>', methods=['POST'])
+def delete_instant_order(ord_id):
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT * FROM instantorders WHERE Ord_id = %s",(ord_id,))
+    vehicle_no = cursor.fetchone()
+    cursor.execute("UPDATE vehicles SET Cus_id = NULL WHERE NoPlate = %s",(vehicle_no[4],))
+    cursor.execute("DELETE FROM instantorders WHERE Ord_id = %s", (ord_id,))
+    mysql.connection.commit()
+    cursor.close()
+    flash("Instant order deleted.", 'success')
+    return redirect(url_for('customers'))
+
+@app.route('/vehicle_info_customers/<vehicle_no>', methods=['GET'])
+def vehicle_info_customers(vehicle_no):
+    # Fetch vehicle details along with the rental shop information
+    if 'user' not in session or session.get('role') != 'customer':
+        return redirect(url_for('login'))
+    cursor = mysql.connection.cursor()
+    cursor.execute("""
+        SELECT v.NoPlate, v.Type, v.Model, v.Seats, r.Name AS RentalName, r.Location AS RentalLocation
+        FROM vehicles v
+        JOIN rentalshops r ON v.RentalId = r.Id
+        WHERE v.NoPlate = %s
+    """, (vehicle_no,))
+    vehicle_info = cursor.fetchone()
+    cursor.close()
+
+    if vehicle_info:
+        return render_template('vehicle_info_customer.html', vehicle_info=vehicle_info)
+    else:
+        return "Vehicle not found", 404
+    
+
+
+
 @app.route('/vehicles_owner')
 def vehicles_owner():
     if 'user' not in session or session.get('role') != 'rental_shop':
-        flash("Please log in as a rental shop to view your vehicles.", 'error')
         return redirect(url_for('login'))
 
     shop_id = session['user']

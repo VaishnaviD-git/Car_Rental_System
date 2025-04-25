@@ -109,39 +109,67 @@
         <a href="{{ url_for('instant_order') }}">Instant Order</a>
     </div>
 
-    <h2>Your Booked Vehicles</h2>
-    {% if vehicles %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Number Plate</th>
-                    <th>Type</th>
-                    <th>Model</th>
-                    <th>Seats</th>
-                    <th>Location</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for vehicle in vehicles %}
-                <tr>
-                    <td>{{ vehicle[0] }}</td>
-                    <td>{{ vehicle[1] }}</td>
-                    <td>{{ vehicle[2] }}</td>
-                    <td>{{ vehicle[3] }}</td>
-                    <td>{{ vehicle[4] }}</td>
-                    <td>
-                        <form method="post" action="{{ url_for('delete_booking', vehicle_no=vehicle[0]) }}">
-                            <button class="delete-btn" type="submit">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p>You haven’t booked any vehicles yet.</p>
-    {% endif %}
+    <h2>Your Reservations</h2>
+{% if reservations %}
+    <table>
+        <thead>
+            <tr>
+                <th>Reservation ID</th>
+                <th>Location</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Time Slot</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for res in reservations %}
+            <tr>
+                <td>{{ res[0] }}</td>
+                <td>{{ res[1] }}</td>
+                <td>{{ res[2] }}</td>
+                <td>{{ res[3] }}</td>
+                <td>{{ res[4] }}</td>
+                <td>
+                    <a href="{{ url_for('vehicle_info_customers', vehicle_no=res[5]) }}">View Vehicle</a> |
+                    <a href="{{ url_for('reservation_info', res_id=res[0]) }}">View Reservation</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>You haven’t made any reservations yet.</p>
+{% endif %}
+
+<h2>Your Instant Orders</h2>
+{% if instant_orders %}
+    <table>
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Location</th>
+                <th>Time Slot</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in instant_orders %}
+            <tr>
+                <td>{{ order[0] }}</td>
+                <td>{{ order[1] }}</td>
+                <td>{{ order[2] }}</td>
+                <td>
+                    <a href="{{ url_for('vehicle_info_customers', vehicle_no=order[3]) }}">View Vehicle</a> |
+                    <a href="{{ url_for('instant_order_info', ord_id=order[0]) }}">View Order</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>You haven’t placed any instant orders yet.</p>
+{% endif %}
 
 </body>
 </html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reservation Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            background-color: #f4f4f4;
+        }
+
+        .card {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            width: 400px;
+            margin: 0 auto;
+        }
+
+        .card h2 {
+            margin-bottom: 20px;
+        }
+
+        .card p {
+            margin: 10px 0;
+        }
+
+        .delete-btn {
+            margin-top: 20px;
+            padding: 10px 16px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .delete-btn:hover {
+            background-color: darkred;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Reservation #{{ data[0] }}</h2>
+    <p><strong>Location:</strong> {{ data[2] }}</p>
+    <p><strong>From Date:</strong> {{ data[4] }}</p>
+    <p><strong>To Date:</strong> {{ data[5] }}</p>
+    <p><strong>Time Slot:</strong> {{ data[3] }}</p>
+    <p><strong>Vehicle No:</strong> {{ data[6] or "Not Assigned" }}</p>
+
+    <form action="{{ url_for('delete_reservation', res_id=data[0]) }}" method="post">
+        <button class="delete-btn" type="submit">Delete Reservation</button>
+    </form>
+</div>
+
+</body>
+</html>
