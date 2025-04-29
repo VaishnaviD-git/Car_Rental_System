@@ -1,18 +1,106 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Edit Vehicle</title>
+  <meta charset="UTF-8">
+  <title>Edit Vehicle</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #fcefee, #e8f0ff); /* pastel pink and purple */
+      padding: 50px;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      animation: fadeIn 1s ease-in;
+    }
+
+    form {
+      background-color: #ffffff;
+      padding: 30px 40px;
+      border-radius: 12px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      animation: slideIn 1s ease;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #4a4e69;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 12px;
+      margin-top: 6px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      background-color: #f9f9fb;
+      transition: border-color 0.3s ease;
+      font-size: 15px;
+    }
+
+    input[type="text"]:focus, input[type="number"]:focus {
+      border-color: #b8c1ec;
+      outline: none;
+    }
+
+    button {
+      margin-top: 25px;
+      width: 100%;
+      background-color: #b8c1ec; /* pastel lavender button */
+      color: #2d3142;
+      border: none;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    button:hover {
+      background-color: #a0b1e3;
+      transform: scale(1.03);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(50px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
 <body>
+
+  <form method="POST">
     <h2>Edit Vehicle Details</h2>
-    <form method="POST">
-        <label>Type:</label>
-        <input type="text" name="type" value="{{ vehicle[1] }}" required><br>
-        <label>Model:</label>
-        <input type="text" name="model" value="{{ vehicle[2] }}" required><br>
-        <label>Seats:</label>
-        <input type="number" name="seats" value="{{ vehicle[3] }}" required><br>
-        <button type="submit">Update</button>
-    </form>
+
+    <label for="type">Type:</label>
+    <input type="text" id="type" name="type" value="{{ vehicle[1] }}" required>
+
+    <label for="model">Model:</label>
+    <input type="text" id="model" name="model" value="{{ vehicle[2] }}" required>
+
+    <label for="seats">Seats:</label>
+    <input type="number" id="seats" name="seats" value="{{ vehicle[3] }}" required>
+
+    <button type="submit">Update</button>
+  </form>
+
 </body>
 </html>

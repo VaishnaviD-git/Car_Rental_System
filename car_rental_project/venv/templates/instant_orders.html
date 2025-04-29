@@ -5,62 +5,91 @@
     <title>Instant Order</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #fcefee, #e8f0ff); /* pastel pink and purple */
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            min-height: 100vh;
+            padding: 20px;
+            animation: fadeIn 1s ease-in;
         }
 
         .form-box {
-            background: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+            background: #ffffff;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
             width: 400px;
+            text-align: center;
+            animation: slideIn 1s ease;
         }
 
         h1 {
-            text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            color: #4a4e69;
+            font-size: 26px;
         }
 
         input, select {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             margin-top: 10px;
             margin-bottom: 20px;
-            border-radius: 5px;
+            border-radius: 8px;
             border: 1px solid #ccc;
+            font-size: 16px;
+            background-color: #f9f9f9;
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
         }
 
         button {
             width: 100%;
-            padding: 12px;
-            background-color: #007bff;
+            padding: 14px;
+            background-color: #ff6b6b;
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             font-weight: bold;
+            font-size: 16px;
             cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
 
         button:hover {
-            background-color: #0056b3;
+            background-color: #e63946;
+            transform: scale(1.03);
         }
 
         .back-link {
             display: block;
-            text-align: center;
-            margin-top: 15px;
+            margin-top: 20px;
             text-decoration: none;
-            color: #007bff;
+            color: #6c5ce7;
+            font-weight: bold;
         }
 
         .back-link:hover {
             text-decoration: underline;
+            color: #4834d4;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
@@ -77,6 +106,7 @@
 
             <button type="submit">Book Now</button>
         </form>
+        <a href="{{ url_for('rental_shops') }}" class="back-link">← Back to Dashboard</a>
     </div>
 
 </body>

@@ -1,58 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Instant Order Details</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 40px;
-            background-color: #f4f4f4;
-        }
+  <meta charset="UTF-8">
+  <title>Instant Order Details</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #fcefee, #e8f0ff); /* pastel pink and purple */
+      padding: 40px;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      animation: fadeIn 1s ease-in;
+    }
 
-        .card {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            width: 400px;
-            margin: 0 auto;
-        }
+    .card {
+      background-color: #ffffff;
+      padding: 30px 40px;
+      border-radius: 12px;
+      width: 400px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      text-align: center;
+      animation: slideIn 1s ease;
+    }
 
-        .card h2 {
-            margin-bottom: 20px;
-        }
+    .card h2 {
+      margin-bottom: 20px;
+      color: #4a4e69;
+      font-size: 24px;
+    }
 
-        .card p {
-            margin: 10px 0;
-        }
+    .card p {
+      margin: 12px 0;
+      font-size: 16px;
+      color: #555;
+    }
 
-        .delete-btn {
-            margin-top: 20px;
-            padding: 10px 16px;
-            background-color: red;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-        }
+    .delete-btn {
+      margin-top: 25px;
+      padding: 12px 20px;
+      background-color: #ff6b6b;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
 
-        .delete-btn:hover {
-            background-color: darkred;
-        }
-    </style>
+    .delete-btn:hover {
+      background-color: #e63946;
+      transform: scale(1.03);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(50px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
 <body>
 
 <div class="card">
-    <h2>Instant Order #{{ data[0] }}</h2>
-    <p><strong>Location:</strong> {{ data[2] }}</p>
-    <p><strong>Time Slot:</strong> {{ data[3] }}</p>
-    <p><strong>Vehicle No:</strong> {{ data[4] or "Not Assigned" }}</p>
+  <h2>Instant Order #{{ data[0] }}</h2>
+  <p><strong>Location:</strong> {{ data[2] }}</p>
+  <p><strong>Time Slot:</strong> {{ data[3] }}</p>
+  <p><strong>Vehicle No:</strong> {{ data[4] or "Not Assigned" }}</p>
 
-    <form action="{{ url_for('delete_instant_order', ord_id=data[0]) }}" method="post">
-        <button class="delete-btn" type="submit">Delete Order</button>
-    </form>
+  <form action="{{ url_for('delete_instant_order', ord_id=data[0]) }}" method="post">
+    <button class="delete-btn" type="submit">Delete Order</button>
+  </form>
 </div>
 
 </body>

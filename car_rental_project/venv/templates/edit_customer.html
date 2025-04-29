@@ -1,73 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Edit Customer Info</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
-            padding: 50px;
-        }
+  <meta charset="UTF-8">
+  <title>Edit Customer Info</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #fcefee, #e8f0ff); /* Pastel pink and purple */
+      padding: 50px;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      animation: fadeIn 1s ease-in;
+    }
 
-        form {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            max-width: 500px;
-            margin: auto;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
+    form {
+      background-color: #ffffff;
+      padding: 30px 40px;
+      border-radius: 12px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      animation: slideIn 1s ease;
+    }
 
-        label {
-            display: block;
-            margin-top: 15px;
-            font-weight: bold;
-        }
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #4a4e69;
+    }
 
-        input[type="text"], textarea {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+      color: #555;
+    }
 
-        button {
-            margin-top: 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+    input[type="text"], textarea {
+      width: 100%;
+      padding: 12px;
+      margin-top: 6px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      background-color: #f9f9fb;
+      transition: border-color 0.3s ease;
+      font-size: 15px;
+    }
 
-        button:hover {
-            background-color: #0056b3;
-        }
+    input[type="text"]:focus, textarea:focus {
+      border-color: #b8c1ec; /* Pastel lavender border on focus */
+      outline: none;
+    }
 
-    </style>
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    button {
+      margin-top: 25px;
+      width: 100%;
+      background-color: #b8c1ec; /* Pastel lavender button */
+      color: #2d3142;
+      border: none;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    button:hover {
+      background-color: #a0b1e3;
+      transform: scale(1.03);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(50px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
 <body>
 
-    <form method="POST">
-        <h2>Edit Your Information</h2>
+  <form method="POST">
+    <h2>Edit Your Information</h2>
 
-        <label for="name">Name</label>
-        <input type="text" id="name" name="name" value="{{ customer[1] }}" required>
+    <label for="name">Name</label>
+    <input type="text" id="name" name="name" value="{{ customer[1] }}" required>
 
-        <label for="adhaar_no">Aadhaar Number</label>
-        <input type="text" id="adhaar_no" name="adhaar_no" value="{{ customer[2] }}" required>
+    <label for="adhaar_no">Aadhaar Number</label>
+    <input type="text" id="adhaar_no" name="adhaar_no" value="{{ customer[2] }}" required>
 
-        <label for="license">Driving License</label>
-        <input type="text" id="license" name="license" value="{{ customer[3] }}" required>
+    <label for="license">Driving License</label>
+    <input type="text" id="license" name="license" value="{{ customer[3] }}" required>
 
-        <label for="address">Permanent Address</label>
-        <textarea id="address" name="address" required>{{ customer[4] }}</textarea>
+    <label for="address">Permanent Address</label>
+    <textarea id="address" name="address" required>{{ customer[4] }}</textarea>
 
-        <button type="submit">Save Changes</button>
-    </form>
+    <button type="submit">Save Changes</button>
+  </form>
 
 </body>
 </html>
