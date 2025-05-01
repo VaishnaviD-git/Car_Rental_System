@@ -2,24 +2,35 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Customer Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Customer Dashboard - Travelania</title>
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #fcefee, #e8f0ff);
-      color: #333;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 40px 0;
+      background: url('https://www.ecorentacar.com/wp-content/uploads/2019/09/Car-Image.jpg') no-repeat center center/cover;
       min-height: 100vh;
-      animation: fadeIn 1s ease-in;
+      color: white;
+      padding: 2rem;
+    }
+
+    .overlay-box {
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 2rem;
+      border-radius: 16px;
+      max-width: 1000px;
+      margin: 2rem auto;
     }
 
     h1, h2 {
       margin-bottom: 15px;
       text-align: center;
-      color: #4a4e69;
+      color: #7fffd4;
     }
 
     .top-buttons, .button-container {
@@ -38,9 +49,6 @@
       border-radius: 10px;
       font-weight: bold;
       transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
     }
 
     .top-buttons a:hover, .button-container a:hover {
@@ -49,15 +57,13 @@
     }
 
     table {
-      width: 90%;
-      max-width: 1000px;
+      width: 100%;
       border-collapse: collapse;
-      margin: 20px auto;
       background: #ffffff;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
       border-radius: 12px;
       overflow: hidden;
-      animation: slideIn 1s ease;
+      color: #333;
+      margin-top: 2rem;
     }
 
     th, td {
@@ -89,120 +95,89 @@
       background-color: #e63946;
     }
 
-    p {
+    p.no-data {
       margin: 20px;
       font-size: 18px;
       text-align: center;
-      color: #6c757d;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateY(50px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Optional ripple effect */
-    .top-buttons a::after, .button-container a::after {
-      content: '';
-      position: absolute;
-      background: rgba(255, 255, 255, 0.4);
-      border-radius: 50%;
-      transform: scale(0);
-      opacity: 0;
-      transition: transform 0.5s, opacity 1s;
-    }
-
-    .top-buttons a:active::after, .button-container a:active::after {
-      width: 200%;
-      height: 200%;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(1);
-      opacity: 1;
-      transition: 0s;
+      color: #ddd;
     }
   </style>
 </head>
 <body>
+  <div class="overlay-box">
+    <h1>Welcome, {{ customer[1] }}</h1>
 
-  <h1>Welcome, {{ customer[1] }}</h1>
+    <div class="top-buttons">
+      <a href="{{ url_for('edit_customer') }}">Edit Info</a>
+      <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
 
-  <div class="top-buttons">
-    <a href="{{ url_for('edit_customer') }}">Edit Info</a>
-    <a href="{{ url_for('logout') }}">Logout</a>
+    <div class="button-container">
+      <a href="{{ url_for('reservation') }}">Book Reservation</a>
+      <a href="{{ url_for('instant_order') }}">Instant Order</a>
+    </div>
+
+    <h2>Your Reservations</h2>
+    {% if reservations %}
+    <table>
+      <thead>
+        <tr>
+          <th>Reservation ID</th>
+          <th>Location</th>
+          <th>From</th>
+          <th>To</th>
+          <th>Time Slot</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for res in reservations %}
+        <tr>
+          <td>{{ res[0] }}</td>
+          <td>{{ res[1] }}</td>
+          <td>{{ res[2] }}</td>
+          <td>{{ res[3] }}</td>
+          <td>{{ res[4] }}</td>
+          <td>
+            <a href="{{ url_for('vehicle_info_customers', vehicle_no=res[5]) }}">View Vehicle</a> |
+            <a href="{{ url_for('reservation_info', res_id=res[0]) }}">View Reservation</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="no-data">You haven’t made any reservations yet.</p>
+    {% endif %}
+
+    <h2>Your Instant Orders</h2>
+    {% if instant_orders %}
+    <table>
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Location</th>
+          <th>Time Slot</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for order in instant_orders %}
+        <tr>
+          <td>{{ order[0] }}</td>
+          <td>{{ order[1] }}</td>
+          <td>{{ order[2] }}</td>
+          <td>
+            <a href="{{ url_for('vehicle_info_customers', vehicle_no=order[3]) }}">View Vehicle</a> |
+            <a href="{{ url_for('instant_order_info', ord_id=order[0]) }}">View Order</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="no-data">You haven’t placed any instant orders yet.</p>
+    {% endif %}
   </div>
-
-  <div class="button-container">
-    <a href="{{ url_for('reservation') }}">Book Reservation</a>
-    <a href="{{ url_for('instant_order') }}">Instant Order</a>
-  </div>
-
-  <h2>Your Reservations</h2>
-  {% if reservations %}
-  <table>
-    <thead>
-      <tr>
-        <th>Reservation ID</th>
-        <th>Location</th>
-        <th>From</th>
-        <th>To</th>
-        <th>Time Slot</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for res in reservations %}
-      <tr>
-        <td>{{ res[0] }}</td>
-        <td>{{ res[1] }}</td>
-        <td>{{ res[2] }}</td>
-        <td>{{ res[3] }}</td>
-        <td>{{ res[4] }}</td>
-        <td>
-          <a href="{{ url_for('vehicle_info_customers', vehicle_no=res[5]) }}">View Vehicle</a> |
-          <a href="{{ url_for('reservation_info', res_id=res[0]) }}">View Reservation</a>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  {% else %}
-  <p>You haven’t made any reservations yet.</p>
-  {% endif %}
-
-  <h2>Your Instant Orders</h2>
-  {% if instant_orders %}
-  <table>
-    <thead>
-      <tr>
-        <th>Order ID</th>
-        <th>Location</th>
-        <th>Time Slot</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for order in instant_orders %}
-      <tr>
-        <td>{{ order[0] }}</td>
-        <td>{{ order[1] }}</td>
-        <td>{{ order[2] }}</td>
-        <td>
-          <a href="{{ url_for('vehicle_info_customers', vehicle_no=order[3]) }}">View Vehicle</a> |
-          <a href="{{ url_for('instant_order_info', ord_id=order[0]) }}">View Order</a>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  {% else %}
-  <p>You haven’t placed any instant orders yet.</p>
-  {% endif %}
-
 </body>
 </html>
