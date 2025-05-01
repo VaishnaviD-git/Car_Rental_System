@@ -2,40 +2,68 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Edit Vehicle</title>
+  <title>Edit Vehicle - Travelania</title>
   <style>
-    body {
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #fcefee, #e8f0ff); /* pastel pink and purple */
-      padding: 50px;
+    }
+
+    body {
+      background: url('https://images.pexels.com/photos/5182301/pexels-photo-5182301.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1') no-repeat center center/cover;
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      animation: fadeIn 1s ease-in;
+      position: relative;
+      padding: 30px;
     }
 
-    form {
-      background-color: #ffffff;
-      padding: 30px 40px;
-      border-radius: 12px;
+    .nav-logo {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+    }
+
+    .nav-logo a {
+      padding: 10px 20px;
+      background-color: #b8c1ec;
+      color: #2d3142;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-logo a:hover {
+      background-color: #a0b1e3;
+      transform: scale(1.05);
+    }
+
+    .overlay-box {
+      background-color: rgba(0, 0, 0, 0.65);
+      padding: 35px 45px;
+      border-radius: 14px;
       max-width: 500px;
       width: 100%;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
       animation: slideIn 1s ease;
     }
 
     h2 {
       text-align: center;
       margin-bottom: 25px;
-      color: #4a4e69;
+      color: #62a4d3;
     }
 
     label {
       display: block;
       margin-top: 15px;
       font-weight: bold;
-      color: #555;
+      color: #d992cc;
     }
 
     input[type="text"], input[type="number"] {
@@ -44,21 +72,21 @@
       margin-top: 6px;
       border-radius: 8px;
       border: 1px solid #ccc;
-      background-color: #f9f9fb;
+      background-color: #98939c;
       transition: border-color 0.3s ease;
       font-size: 15px;
     }
 
     input[type="text"]:focus, input[type="number"]:focus {
-      border-color: #b8c1ec;
+      border-color: #68c79d;
       outline: none;
     }
 
     button {
       margin-top: 25px;
       width: 100%;
-      background-color: #b8c1ec; /* pastel lavender button */
-      color: #2d3142;
+      background-color: #4bc438;
+      color: #000000;
       border: none;
       padding: 14px;
       border-radius: 10px;
@@ -74,11 +102,6 @@
       transform: scale(1.03);
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
     @keyframes slideIn {
       from { opacity: 0; transform: translateY(50px); }
       to { opacity: 1; transform: translateY(0); }
@@ -87,20 +110,26 @@
 </head>
 <body>
 
-  <form method="POST">
+  <div class="nav-logo">
+    <a href="{{ url_for('admin_dashboard') }}">← Back to Dashboard</a>
+  </div>
+
+  <div class="overlay-box">
     <h2>Edit Vehicle Details</h2>
 
-    <label for="type">Type:</label>
-    <input type="text" id="type" name="type" value="{{ vehicle[1] }}" required>
+    <form method="POST">
+      <label for="type">Type:</label>
+      <input type="text" id="type" name="type" value="{{ vehicle[1] }}" required>
 
-    <label for="model">Model:</label>
-    <input type="text" id="model" name="model" value="{{ vehicle[2] }}" required>
+      <label for="model">Model:</label>
+      <input type="text" id="model" name="model" value="{{ vehicle[2] }}" required>
 
-    <label for="seats">Seats:</label>
-    <input type="number" id="seats" name="seats" value="{{ vehicle[3] }}" required>
+      <label for="seats">Seats:</label>
+      <input type="number" id="seats" name="seats" value="{{ vehicle[3] }}" required>
 
-    <button type="submit">Update</button>
-  </form>
+      <button type="submit">Update</button>
+    </form>
+  </div>
 
 </body>
 </html>

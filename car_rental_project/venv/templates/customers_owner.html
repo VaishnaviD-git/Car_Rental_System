@@ -2,36 +2,67 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Customers Who Booked</title>
+  <title>Customers Who Booked - Travelania</title>
   <style>
-    body {
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #fcefee, #e8f0ff); /* Pink and purple pastel background */
-      color: #333;
-      padding: 40px;
+    }
+
+    body {
+      background: url('https://media.istockphoto.com/id/540529776/photo/portrait-of-young-woman-in-car-looking-at-map.jpg?s=612x612&w=0&k=20&c=Y1b45-svp2uJmS5azK0exnUIzvgqDjWJwZKL1f9pdF8=') no-repeat center center/cover;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      animation: fadeIn 1s ease-in;
+      color: white;
+      padding: 2rem;
+      position: relative;
+    }
+
+    .nav-logo {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+    }
+
+    .nav-logo a {
+      padding: 10px 20px;
+      background-color: #b8c1ec;
+      color: #2d3142;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-logo a:hover {
+      background-color: #a0b1e3;
+      transform: scale(1.05);
+    }
+
+    .overlay-box {
+      background-color: rgba(0, 0, 0, 0.65);
+      padding: 2rem;
+      border-radius: 16px;
+      max-width: 1000px;
+      margin: 80px auto 40px;
     }
 
     h1 {
       text-align: center;
       margin-bottom: 30px;
-      color: #4a4e69;
+      color: #77dbe2;
     }
 
     table {
-      width: 90%;
-      max-width: 1000px;
-      margin: 20px auto;
+      width: 100%;
       border-collapse: collapse;
       background: #ffffff;
       border-radius: 12px;
       overflow: hidden;
       box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-      animation: slideIn 1s ease;
+      color: #333;
     }
 
     th, td {
@@ -42,61 +73,39 @@
     }
 
     th {
-      background-color: #ffcad4; /* Soft pastel pink */
+      background-color: #ffcad4;
       color: #333;
       font-weight: bold;
     }
 
     tr:nth-child(even) {
-      background-color: #f9f9fb; /* Very light purple tint */
+      background-color: #f9f9fb;
     }
 
-    p {
-      margin: 30px 0;
+    p.no-data {
+      margin: 20px;
       font-size: 18px;
-      color: #6c757d;
       text-align: center;
-    }
-
-    a {
-      margin-top: 30px;
-      text-decoration: none;
-      background-color: #b8c1ec; /* Pastel lavender button */
-      color: #2d3142;
-      padding: 10px 20px;
-      border-radius: 8px;
-      font-weight: bold;
-      transition: background-color 0.3s ease, transform 0.3s ease;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-    }
-
-    a:hover {
-      background-color: #a0b1e3;
-      transform: scale(1.05);
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateY(50px); }
-      to { opacity: 1; transform: translateY(0); }
+      color: #ddd;
     }
   </style>
 </head>
 <body>
 
-  <h1>Customers Who Have Booked or Ordered</h1>
+  <div class="nav-logo">
+    <a href="{{ url_for('admin_dashboard') }}">← Back to Dashboard</a>
+  </div>
 
-  {% if customers %}
+  <div class="overlay-box">
+    <h1>Customers Who Have Booked or Ordered</h1>
+
+    {% if customers %}
     <table>
       <thead>
         <tr>
           <th>ID</th>
           <th>Name</th>
-          <th>Adhaar No</th>
+          <th>Aadhaar No</th>
           <th>Driving License</th>
           <th>Address</th>
         </tr>
@@ -113,5 +122,10 @@
         {% endfor %}
       </tbody>
     </table>
-  {% else %}
-    <p>No custome
+    {% else %}
+    <p class="no-data">No customers have booked or ordered yet.</p>
+    {% endif %}
+  </div>
+
+</body>
+</html>
