@@ -14,7 +14,7 @@
 
     body {
       background: url('https://blog.harniman.com/wp-content/uploads/2012/11/Peugeot.jpg') no-repeat center center/cover;
-      height: 108vh;
+      height: 100vh;
       color: white;
     }
 
@@ -68,52 +68,55 @@
       color: white;
     }
 
-    .overlay-box .button-group {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 1rem;
-    }
+        .button-pair {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 15px;
+        }
 
-    .overlay-box button {
-      padding: 0.6rem 1.5rem;
-      margin: 12px;
-      border: none;
-      border-radius: 8px;
-      background-color: #2e8b57;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-    }
+        .button-pair button {
+            flex: 1;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
 
-    .overlay-box button:hover {
-      background-color: #246b45;
-    }
-  </style>
+        .button-pair button:hover {
+            background-color: #0056b3;
+        }
+
+        .error {
+            color: red;
+            margin-top: 15px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-  <nav>
-    <div class="logo">Travelania</div>
-  </nav>
 
+    <form action="{{ url_for('login') }}" method="POST" autocomplete="off">
+        <h2>Login</h2>
 
-<div class="main-content">
-  <div class="overlay-box">
-    <h1>LOGIN</h1>
-    <h2>Welcome Back!</h2>
-    
- 
+        <label for="username">Aadhaar / Rental Id:</label>
+        <input type="text" name="username" required autocomplete="off">
 
-  <form action="{{ url_for('login') }}" method="POST" autocomplete="off">
-    <label for="username">Aadhaar / Rental Id:</label>
-    <input type="text" name="username" required autocomplete="off">
+        <label for="password">DL / Rental Code:</label>
+        <input type="password" name="password" required autocomplete="off">
 
-    <label for="password">DL / Rental Code:</label>
-    <input type="password" name="password" required autocomplete="off">
-
-    <div class="button-pair">
-      <button type="submit" name="role" value="customer">Customer Login</button>
-      <button type="submit" name="role" value="owner">Owner Login</button>
-    </div>
+        <div class="button-pair">
+            <button type="submit" name="role" value="customer">Customer Login</button>
+            <button type="submit" name="role" value="owner">Owner Login</button>
+        </div>
 
     {% if error %}
       <div class="error">{{ error }}</div>
@@ -121,5 +124,3 @@
   </form>
 </div>
 </div>
-</body>
-</html>

@@ -10,7 +10,7 @@
       padding: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-    
+
     body {
       background: url('https://www.automotiveaddicts.com/wp-content/uploads/2021/06/car-road-trip.jpg') no-repeat center center/cover;
       min-height: 100vh;
@@ -20,28 +20,6 @@
       padding: 2rem;
       animation: fadeIn 1s ease-in;
       color: white;
-      position: relative;
-    }
-
-    .nav-logo {
-      position: absolute;
-      top: 20px;
-      right: 30px;
-    }
-
-    .nav-logo a {
-      padding: 10px 20px;
-      background-color: #b8c1ec;
-      color: #2d3142;
-      text-decoration: none;
-      border-radius: 8px;
-      font-weight: bold;
-      transition: background-color 0.3s ease, transform 0.3s ease;
-    }
-
-    .nav-logo a:hover {
-      background-color: #a0b1e3;
-      transform: scale(1.05);
     }
 
     .overlay-box {
@@ -57,14 +35,14 @@
     h2 {
       text-align: center;
       margin-bottom: 25px;
-      color: #7fffd4;
+      color: #80e0e9;
     }
 
     label {
       display: block;
       margin-top: 15px;
       font-weight: bold;
-      color: #ddd;
+      color: #e3e4a1;
     }
 
     input[type="text"],
@@ -74,7 +52,7 @@
       margin-top: 6px;
       border-radius: 8px;
       border: 1px solid #ccc;
-      background-color: #f9f9fb;
+      background-color: #e4e4e4;
       font-size: 15px;
       transition: border-color 0.3s ease;
     }
@@ -122,10 +100,6 @@
   </style>
 </head>
 <body>
-
-  <div class="nav-logo">
-    <a href="{{ url_for('customer_dashboard') }}">← Back to Dashboard</a>
-  </div>
 
   <div class="overlay-box">
     <form method="POST">

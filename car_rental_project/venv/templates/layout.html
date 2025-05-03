@@ -53,24 +53,19 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
+      align-items: flex-start;
       height: 80vh;
       padding: 2rem 4rem;
     }
 
-    .overlay-box {
-      background-color: rgba(0, 0, 0, 0.5);
-      padding: 2rem;
-      border-radius: 16px;
-      max-width: 700px;
-    }
-
-    .overlay-box h1 {
+    .main-content h1 {
       font-size: 3.5rem;
       margin-bottom: 1rem;
     }
 
-    .overlay-box p {
+    .main-content p {
       font-size: 1.2rem;
+      max-width: 600px;
       color: #ddd;
     }
 
@@ -81,11 +76,11 @@
         text-align: center;
       }
 
-      .overlay-box h1 {
+      .main-content h1 {
         font-size: 2.5rem;
       }
 
-      .overlay-box p {
+      .main-content p {
         font-size: 1rem;
       }
     }
@@ -95,20 +90,17 @@
   <nav>
     <div class="logo">Travelania</div>
     <div class="nav-buttons">
-      <a href="{{ url_for('login') }}" >Login</a>
-      <a href="{{ url_for('register') }}" >Register</a>
+      <a href="/login">Login</a>
+      <a href="/register">Register</a>
     </div>
   </nav>
 
   <div class="main-content">
-    <div class="overlay-box">
-      <h1>Premium Car Rental Services</h1>
-      <p>
-        Affordable and flexible car rentals for every journey. Choose from a wide range
-        of vehicles for hassle-free travel experiences.
-      </p>
-    </div>
+    <h1>Premium Car Rental Services</h1>
+    <p>
+      Affordable and flexible car rentals for every journey. Choose from a wide range
+      of vehicles for hassle-free travel experiences.
+    </p>
   </div>
 </body>
-
 </html>
