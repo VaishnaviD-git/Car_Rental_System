@@ -14,7 +14,6 @@ app.config['MYSQL_DB'] = 'car_rental'
 
 mysql = MySQL(app)
 
-
 @app.route('/')
 def index():
     return render_template('layout.html')
@@ -161,8 +160,6 @@ def reservation():
         return redirect(url_for('vehicles', location=location))
 
     return render_template('reservation.html')
-
-
 
 @app.route('/vehicles', methods=['GET'])
 def vehicles():
@@ -377,9 +374,6 @@ def vehicle_info_customers(vehicle_no):
     else:
         return "Vehicle not found", 404
     
-
-
-
 @app.route('/vehicles_owner')
 def vehicles_owner():
     if 'user' not in session or session.get('role') != 'rental_shop':
@@ -412,7 +406,6 @@ def delete_vehicle(number_plate):
     cursor.close()
     flash("Vehicle deleted successfully.", "success")
     return redirect(url_for('vehicles_owner'))
-
 
 # EDIT vehicle form + update
 @app.route('/edit_vehicle/<number_plate>', methods=['GET', 'POST'])
@@ -514,8 +507,6 @@ def owner_edit():
     shop = cursor.fetchone()
     cursor.close()
     return render_template("owner_edit.html", shop=shop)
-
-
 
 if __name__ == '__main__':
     app.run(debug=True)
