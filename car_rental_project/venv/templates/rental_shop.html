@@ -1,4 +1,3 @@
-<!-- rental_shop.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,51 +5,74 @@
     <title>Rental Shop Dashboard</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: url('https://content.jdmagicbox.com/comp/def_content_category/car-rental-for-ajmer/360-f-674676693-7ez0d7woc6oujp4jgaivb5s3dzsz1frv-car-rental-for-ajmer-2-jfigk.jpg') no-repeat center center/cover;
+            color: #fff;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
             margin: 0;
+            padding: 20px;
+        }
+
+        .dashboard-box {
+            background-color: rgba(0, 0, 0, 0.65);
+            padding: 40px 50px;
+            border-radius: 14px;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            animation: fadeIn 1s ease-in;
         }
 
         h1 {
             margin-bottom: 40px;
+            font-size: 32px;
+            color: #cdabab;
         }
 
         .button-container {
             display: flex;
-            gap: 40px;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
         }
 
         .button-container a {
-            padding: 20px 40px;
-            background-color: #007bff;
+            padding: 18px 35px;
+            background-color: #da9945;
             color: white;
             text-decoration: none;
-            border-radius: 10px;
-            font-size: 1.2em;
+            border-radius: 12px;
+            font-size: 1.1em;
             font-weight: bold;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 0 10px rgba(108, 92, 231, 0.5);
         }
 
         .button-container a:hover {
-            background-color: #0056b3;
+            background-color: #a29bfe;
+            transform: scale(1.05);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
 
-    <h1>Rental Shop Dashboard</h1>
+    <div class="dashboard-box">
+        <h1>Rental Shop Dashboard</h1>
 
-    <div class="button-container">
-        <a href="{{ url_for('vehicles_owner') }}">Vehicles</a>
-        <a href="{{ url_for('customers_owner') }}">Customers</a>
-        <a href="{{ url_for('owner_edit') }}">Edit Shop Info</a>
-        <a href="{{ url_for('logout') }}">Logout</a>
+        <div class="button-container">
+            <a href="{{ url_for('vehicles_owner') }}">Vehicles</a>
+            <a href="{{ url_for('customers_owner') }}">Customers</a>
+            <a href="{{ url_for('owner_edit') }}">Edit Shop Info</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
     </div>
 
 </body>

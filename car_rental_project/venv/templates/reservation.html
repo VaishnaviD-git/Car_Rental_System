@@ -1,64 +1,116 @@
-<!-- reservation.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reservation Page</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .form-container {
-            background-color: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            width: 350px;
-        }
-        input, select, button {
-            width: 100%;
-            padding: 10px;
-            margin-top: 10px;
-            border-radius: 4px;
-            border: 1px solid #ddd;
-        }
-        .error {
-            color: red;
-            margin-top: 10px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Make a Reservation</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: url('https://www.hertz.com/content/dam/hertz/global/blog-articles/resources/reservation-process.jpg') no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      backdrop-filter: blur(4px);
+    }
+
+    .form-container {
+      background: rgba(72, 71, 71, 0.7);
+      color: #f1f1f1;
+      padding: 35px 30px;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      width: 360px;
+      animation: fadeIn 1s ease;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #d3e2ef;
+      font-weight: bold;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 700;
+      color: #25371c;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      border-radius: 6px;
+      border: none;
+      font-size: 14px;
+    }
+
+    input, select {
+      background-color: #ebebeb;
+      color: #514d4d;
+      border: 1px solid #444;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #00b4d8;
+      background-color: #4f4a4a;
+    }
+
+    button {
+      background-color: #00b4d8;
+      color: #fff;
+      font-weight: bold;
+      margin-top: 20px;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #0077b6;
+      transform: scale(1.02);
+    }
+
+    .error {
+      margin-top: 12px;
+      color: #df7b7b;
+      text-align: center;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
 <body>
 
-    <div class="form-container">
-        <h2>Make a Reservation</h2>
-        <form action="{{ url_for('reservation') }}" method="POST">
-            <label for="from_date">From Date:</label>
-            <input type="date" name="from_date" id="from_date" required>
-            
-            <label for="to_date">To Date:</label>
-            <input type="date" name="to_date" id="to_date" required>
-            
-            <label for="location">Location:</label>
-            <input type="text" name="location" id="location" required>
-            
-            <label for="time_slot">Time Slot:</label>
-            <input type="time" name="time_slot" id="time_slot" required>
+  <div class="form-container">
+    <h2>Make a Reservation</h2>
+    <form action="{{ url_for('reservation') }}" method="POST">
+      <label for="from_date">From Date:</label>
+      <input type="date" name="from_date" id="from_date" required>
 
-            <button type="submit">Submit Reservation</button>
+      <label for="to_date">To Date:</label>
+      <input type="date" name="to_date" id="to_date" required>
 
-            {% if error %}
-                <div class="error">{{ error }}</div>
-            {% endif %}
-        </form>
-    </div>
+      <label for="location">Location:</label>
+      <input type="text" name="location" id="location" required>
+
+      <label for="time_slot">Time Slot:</label>
+      <input type="time" name="time_slot" id="time_slot" required>
+
+      <button type="submit">Submit Reservation</button>
+
+      {% if error %}
+        <div class="error">{{ error }}</div>
+      {% endif %}
+    </form>
+  </div>
 
 </body>
 </html>

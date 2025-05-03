@@ -1,63 +1,87 @@
-<!-- vehicle_info.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vehicle Information</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-        .vehicle-info {
-            background-color: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 400px;
-        }
-        .vehicle-info h2 {
-            margin-bottom: 20px;
-        }
-        .vehicle-info p {
-            margin: 10px 0;
-        }
-        .back-button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .back-button:hover {
-            background-color: #0056b3;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vehicle Information</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: url('https://images.unsplash.com/photo-1503376780353-7e6692767b70') no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+        backdrop-filter: blur(4px);
+    }
+
+    .vehicle-info {
+      background: rgba(8, 8, 8, 0.75);
+      color: #f1f1f1;
+      padding: 30px 35px;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+      width: 420px;
+      animation: fadeIn 1s ease;
+    }
+
+    h2 {
+      text-align: center;
+      color: #ffc107;
+      margin-bottom: 25px;
+    }
+
+    .vehicle-info p {
+      margin: 12px 0;
+      font-size: 15px;
+    }
+
+    .vehicle-info strong {
+      color: #ddd;
+    }
+
+    .back-button {
+      display: block;
+      margin: 30px auto 0;
+      padding: 12px 24px;
+      background-color: #00b4d8;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .back-button:hover {
+      background-color: #0077b6;
+      transform: scale(1.05);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
 <body>
 
-    <div class="vehicle-info">
-        <h2>Vehicle Information</h2>
-        <p><strong>Vehicle Plate:</strong> {{ vehicle_info[0] }}</p>
-        <p><strong>Type:</strong> {{ vehicle_info[1] }}</p>
-        <p><strong>Model:</strong> {{ vehicle_info[2] }}</p>
-        <p><strong>Seats:</strong> {{ vehicle_info[3] }}</p>
-        <p><strong>Rental Shop Name:</strong> {{ vehicle_info[4] }}</p>
-        <p><strong>Rental Shop Location:</strong> {{ vehicle_info[5] }}</p>
+  <div class="vehicle-info">
+    <h2>Vehicle Information</h2>
+    <p><strong>Vehicle Plate:</strong> {{ vehicle_info[0] }}</p>
+    <p><strong>Type:</strong> {{ vehicle_info[1] }}</p>
+    <p><strong>Model:</strong> {{ vehicle_info[2] }}</p>
+    <p><strong>Seats:</strong> {{ vehicle_info[3] }}</p>
+    <p><strong>Rental Shop Name:</strong> {{ vehicle_info[4] }}</p>
+    <p><strong>Rental Shop Location:</strong> {{ vehicle_info[5] }}</p>
 
-        <a href="{{ url_for('customers')}}">
-            <button class="back-button">Back to Customers</button>
-        </a>
-    </div>
+    <a href="{{ url_for('customers') }}">
+      <button class="back-button">Back to Customers</button>
+    </a>
+  </div>
 
 </body>
 </html>
