@@ -4,37 +4,44 @@
   <meta charset="UTF-8">
   <title>Instant Order Details</title>
   <style>
-    body {
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #fcefee, #e8f0ff); /* pastel pink and purple */
-      padding: 40px;
+    }
+
+    body {
+      background: url('https://photographyreference.com/wp-content/uploads/2022/11/long-exposure-photography-car-lights.jpg') no-repeat center center/cover;
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      animation: fadeIn 1s ease-in;
+      padding: 30px;
     }
 
-    .card {
-      background-color: #ffffff;
-      padding: 30px 40px;
-      border-radius: 12px;
-      width: 400px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-      text-align: center;
+    .overlay-box {
+      background-color: rgba(0, 0, 0, 0.65);
+      padding: 35px 45px;
+      border-radius: 14px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
       animation: slideIn 1s ease;
+      color: #ffffff;
+      text-align: center;
     }
 
-    .card h2 {
+    h2 {
       margin-bottom: 20px;
-      color: #4a4e69;
+      color: #62a4d3;
       font-size: 24px;
     }
 
-    .card p {
+    p {
       margin: 12px 0;
       font-size: 16px;
-      color: #555;
+      color: #f3e1ff;
     }
 
     .delete-btn {
@@ -43,23 +50,18 @@
       background-color: #ff6b6b;
       color: #fff;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       font-size: 16px;
       font-weight: bold;
       cursor: pointer;
       width: 100%;
       transition: background-color 0.3s ease, transform 0.3s ease;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
     }
 
     .delete-btn:hover {
       background-color: #e63946;
       transform: scale(1.03);
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
     }
 
     @keyframes slideIn {
@@ -70,7 +72,7 @@
 </head>
 <body>
 
-<div class="card">
+<div class="overlay-box">
   <h2>Instant Order #{{ data[0] }}</h2>
   <p><strong>Location:</strong> {{ data[2] }}</p>
   <p><strong>Time Slot:</strong> {{ data[3] }}</p>

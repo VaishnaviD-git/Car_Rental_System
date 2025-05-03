@@ -1,113 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Instant Order</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #fcefee, #e8f0ff); /* pastel pink and purple */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            padding: 20px;
-            animation: fadeIn 1s ease-in;
-        }
+  <meta charset="UTF-8">
+  <title>Instant Order - Travelania</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
 
-        .form-box {
-            background: #ffffff;
-            padding: 30px 40px;
-            border-radius: 12px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-            width: 400px;
-            text-align: center;
-            animation: slideIn 1s ease;
-        }
+    body {
+      background: url('https://photographyreference.com/wp-content/uploads/2022/11/long-exposure-photography-car-lights.jpg') no-repeat center center/cover;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      padding: 30px;
+    }
 
-        h1 {
-            margin-bottom: 25px;
-            color: #4a4e69;
-            font-size: 26px;
-        }
+    .overlay-box {
+      background-color: rgba(0, 0, 0, 0.65);
+      padding: 35px 45px;
+      border-radius: 14px;
+      max-width: 450px;
+      width: 100%;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      animation: slideIn 1s ease;
+    }
 
-        input, select {
-            width: 100%;
-            padding: 12px;
-            margin-top: 10px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            font-size: 16px;
-            background-color: #f9f9f9;
-        }
+    h1 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #62a4d3;
+    }
 
-        label {
-            display: block;
-            text-align: left;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #555;
-        }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+      color: #d992cc;
+    }
 
-        button {
-            width: 100%;
-            padding: 14px;
-            background-color: #ff6b6b;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
+    input[type="text"], input[type="time"] {
+      width: 100%;
+      padding: 12px;
+      margin-top: 6px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      background-color: #98939c;
+      transition: border-color 0.3s ease;
+      font-size: 15px;
+    }
 
-        button:hover {
-            background-color: #e63946;
-            transform: scale(1.03);
-        }
+    input:focus {
+      border-color: #68c79d;
+      outline: none;
+    }
 
-        .back-link {
-            display: block;
-            margin-top: 20px;
-            text-decoration: none;
-            color: #6c5ce7;
-            font-weight: bold;
-        }
+    button {
+      margin-top: 25px;
+      width: 100%;
+      background-color: #ff6b6b;
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
 
-        .back-link:hover {
-            text-decoration: underline;
-            color: #4834d4;
-        }
+    button:hover {
+      background-color: #e63946;
+      transform: scale(1.03);
+    }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+    .back-link {
+      display: block;
+      margin-top: 20px;
+      text-align: center;
+      text-decoration: none;
+      color: #b8c1ec;
+      font-weight: bold;
+    }
 
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(50px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
+    .back-link:hover {
+      text-decoration: underline;
+      color: #a0b1e3;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(50px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
 <body>
 
-    <div class="form-box">
-        <h1>Instant Order</h1>
-        <form method="post">
-            <label for="location">Location:</label>
-            <input type="text" id="location" name="location" required>
+  <div class="overlay-box">
+    <h1>Instant Order</h1>
+    <form method="post">
+      <label for="location">Location:</label>
+      <input type="text" id="location" name="location" required>
 
-            <label for="time_slot">Preferred Time Slot:</label>
-            <input type="time" id="time_slot" name="time_slot" required>
+      <label for="time_slot">Preferred Time Slot:</label>
+      <input type="time" id="time_slot" name="time_slot" required>
 
-            <button type="submit">Book Now</button>
-        </form>
-        <a href="{{ url_for('rental_shops') }}" class="back-link">← Back to Dashboard</a>
-    </div>
+      <button type="submit">Book Now</button>
+    </form>
+    <a href="{{ url_for('rental_shops') }}" class="back-link">← Back to Dashboard</a>
+  </div>
 
 </body>
 </html>
