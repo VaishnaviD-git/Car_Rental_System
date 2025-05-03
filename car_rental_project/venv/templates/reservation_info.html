@@ -1,60 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Reservation Details</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 40px;
-            background-color: #f4f4f4;
-        }
+  <meta charset="UTF-8">
+  <title>Reservation Details</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: url('https://www.hertz.com/content/dam/hertz/global/blog-articles/resources/reservation-process.jpg') no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      backdrop-filter: blur(2px);
+    }
 
-        .card {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            width: 400px;
-            margin: 0 auto;
-        }
+    .card {
+      background: rgba(50, 50, 50, 0.65);
+      border-radius: 16px;
+      padding: 35px 40px;
+      width: 420px;
+      color: #fff;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      animation: fadeIn 1s ease-in-out;
+    }
 
-        .card h2 {
-            margin-bottom: 20px;
-        }
+    .card h2 {
+      font-size: 26px;
+      margin-bottom: 20px;
+      color: #68daf3;
+    }
 
-        .card p {
-            margin: 10px 0;
-        }
+    .card p {
+      margin: 12px 0;
+      font-size: 16px;
+      color: #ccebe3;
+    }
 
-        .delete-btn {
-            margin-top: 20px;
-            padding: 10px 16px;
-            background-color: red;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-        }
+    .delete-btn {
+      margin-top: 25px;
+      padding: 12px 20px;
+      background-color: #e63946;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
 
-        .delete-btn:hover {
-            background-color: darkred;
-        }
-    </style>
+    .delete-btn:hover {
+      background-color: #d62828;
+      transform: scale(1.05);
+    }
+
+    .back-link {
+      margin-top: 20px;
+    }
+
+    .back-link a {
+      color: #90e0ef;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .back-link a:hover {
+      text-decoration: underline;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
 <body>
 
 <div class="card">
-    <h2>Reservation #{{ data[0] }}</h2>
-    <p><strong>Location:</strong> {{ data[2] }}</p>
-    <p><strong>From Date:</strong> {{ data[4] }}</p>
-    <p><strong>To Date:</strong> {{ data[5] }}</p>
-    <p><strong>Time Slot:</strong> {{ data[3] }}</p>
-    <p><strong>Vehicle No:</strong> {{ data[6] or "Not Assigned" }}</p>
+  <h2>Reservation #{{ data[0] }}</h2>
+  <p><strong>Location:</strong> {{ data[2] }}</p>
+  <p><strong>From Date:</strong> {{ data[4] }}</p>
+  <p><strong>To Date:</strong> {{ data[5] }}</p>
+  <p><strong>Time Slot:</strong> {{ data[3] }}</p>
+  <p><strong>Vehicle No:</strong> {{ data[6] or "Not Assigned" }}</p>
 
-    <form action="{{ url_for('delete_reservation', res_id=data[0]) }}" method="post">
-        <button class="delete-btn" type="submit">Delete Reservation</button>
-    </form>
+  <form action="{{ url_for('delete_reservation', res_id=data[0]) }}" method="post">
+    <button class="delete-btn" type="submit">Delete Reservation</button>
+  </form>
+
+  <div class="back-link">
+    <a href="{{ url_for('rental_shops') }}">← Back to Dashboard</a>
+  </div>
 </div>
 
 </body>

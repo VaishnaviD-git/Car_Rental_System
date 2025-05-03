@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<<<<<<< HEAD
     <meta charset="UTF-8">
     <title>Instant Order Details</title>
     <style>
@@ -49,6 +50,84 @@
     <p><strong>Location:</strong> {{ data[2] }}</p>
     <p><strong>Time Slot:</strong> {{ data[3] }}</p>
     <p><strong>Vehicle No:</strong> {{ data[4] or "Not Assigned" }}</p>
+=======
+  <meta charset="UTF-8">
+  <title>Instant Order Details</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: url('https://photographyreference.com/wp-content/uploads/2022/11/long-exposure-photography-car-lights.jpg') no-repeat center center/cover;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px;
+    }
+
+    .overlay-box {
+      background-color: rgba(0, 0, 0, 0.65);
+      padding: 35px 45px;
+      border-radius: 14px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      animation: slideIn 1s ease;
+      color: #ffffff;
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #62a4d3;
+      font-size: 24px;
+    }
+
+    p {
+      margin: 12px 0;
+      font-size: 16px;
+      color: #f3e1ff;
+    }
+
+    .delete-btn {
+      margin-top: 25px;
+      padding: 12px 20px;
+      background-color: #ff6b6b;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .delete-btn:hover {
+      background-color: #e63946;
+      transform: scale(1.03);
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(50px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="overlay-box">
+  <h2>Instant Order #{{ data[0] }}</h2>
+  <p><strong>Location:</strong> {{ data[2] }}</p>
+  <p><strong>Time Slot:</strong> {{ data[3] }}</p>
+  <p><strong>Vehicle No:</strong> {{ data[4] or "Not Assigned" }}</p>
+>>>>>>> c73c56ba3b20822eaedbb3ab34d0c776c178c04c
 
     <form action="{{ url_for('delete_instant_order', ord_id=data[0]) }}" method="post">
         <button class="delete-btn" type="submit">Delete Order</button>
