@@ -4,55 +4,81 @@
     <meta charset="UTF-8">
     <title>Edit Rental Shop</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #eef2f3;
+            background: url('https://sharpsheets.io/wp-content/uploads/2023/11/car-rental-scaled.jpg.webp') no-repeat center center/cover;
+            min-height: 100vh;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            padding-top: 50px;
+            padding: 30px;
+        }
+
+        .overlay-box {
+            background-color: rgba(0, 0, 0, 0.65);
+            padding: 35px 45px;
+            border-radius: 14px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            animation: slideIn 1s ease;
+            color: #ffffff;
         }
 
         h1 {
-            margin-bottom: 30px;
-        }
-
-        form {
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            width: 400px;
+            text-align: center;
+            margin-bottom: 25px;
+            color: #7fb8e0;
         }
 
         label {
             display: block;
-            margin: 15px 0 5px;
+            margin-top: 15px;
             font-weight: bold;
+            color: #e7aedd;
         }
 
         input[type="text"],
         input[type="number"] {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
+            margin-top: 6px;
+            border-radius: 8px;
             border: 1px solid #ccc;
-            border-radius: 6px;
+            background-color: #e2dce7;
+            font-size: 15px;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            border-color: #68c79d;
+            outline: none;
         }
 
         button {
             margin-top: 25px;
-            padding: 12px;
             width: 100%;
-            background-color: #007bff;
-            color: white;
+            background-color: #4bc438;
+            color: #000;
             border: none;
-            border-radius: 6px;
-            font-size: 1em;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
             cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
         }
 
         button:hover {
-            background-color: #0056b3;
+            background-color: #a0b1e3;
+            transform: scale(1.03);
         }
 
         .back-link {
@@ -62,36 +88,45 @@
 
         .back-link a {
             text-decoration: none;
-            color: #007bff;
+            color: #b8c1ec;
+            font-weight: bold;
         }
 
         .back-link a:hover {
+            color: #ffffff;
             text-decoration: underline;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
 
-    <h1>Edit Rental Shop Info</h1>
+    <div class="overlay-box">
+        <h1>Edit Rental Shop Info</h1>
 
-    <form method="POST">
-        <label for="name">Shop Name:</label>
-        <input type="text" name="name" id="name" value="{{ shop[1] }}" required>
+        <form method="POST">
+            <label for="name">Shop Name:</label>
+            <input type="text" name="name" id="name" value="{{ shop[1] }}" required>
 
-        <label for="location">Location:</label>
-        <input type="text" name="location" id="location" value="{{ shop[2] }}" required>
+            <label for="location">Location:</label>
+            <input type="text" name="location" id="location" value="{{ shop[2] }}" required>
 
-        <label for="no_of_vehicles">No. of Vehicles:</label>
-        <input type="number" name="no_of_vehicles" id="no_of_vehicles" value="{{ shop[3] }}" required>
+            <label for="no_of_vehicles">No. of Vehicles:</label>
+            <input type="number" name="no_of_vehicles" id="no_of_vehicles" value="{{ shop[3] }}" required>
 
-        <label for="ratings">Ratings:</label>
-        <input type="number" name="ratings" id="ratings" value="{{ shop[4] or 0 }}" min="0" max="5" step="1">
+            <label for="ratings">Ratings:</label>
+            <input type="number" name="ratings" id="ratings" value="{{ shop[4] or 0 }}" min="0" max="5" step="1">
 
-        <button type="submit">Save Changes</button>
-    </form>
+            <button type="submit">Save Changes</button>
+        </form>
 
-    <div class="back-link">
-        <a href="{{ url_for('rental_shops') }}">← Back to Dashboard</a>
+        <div class="back-link">
+            <a href="{{ url_for('rental_shops') }}">← Back to Dashboard</a>
+        </div>
     </div>
 
 </body>
