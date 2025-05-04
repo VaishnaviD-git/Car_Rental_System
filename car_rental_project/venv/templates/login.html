@@ -115,6 +115,10 @@
       <button type="submit" name="role" value="owner">Owner Login</button>
     </div>
 
+    <div class="register-link">
+      <a href="{{ url_for('register') }}">Registration</a>
+    </div>
+
     {% if error %}
       <div class="error">{{ error }}</div>
     {% endif %}

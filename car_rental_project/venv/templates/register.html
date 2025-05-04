@@ -118,6 +118,10 @@
 
         <button type="submit">Register</button>
 
+        <div class="return-to-login-link">
+          <a href="{{ url_for('login') }}">Return to login</a>
+        </div>
+
         {% if error %}
             <div class="error">{{ error }}</div>
         {% endif %}

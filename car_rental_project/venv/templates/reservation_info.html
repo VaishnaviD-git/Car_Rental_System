@@ -88,12 +88,8 @@
   <p><strong>Time Slot:</strong> {{ data[3] }}</p>
   <p><strong>Vehicle No:</strong> {{ data[6] or "Not Assigned" }}</p>
 
-  <form action="{{ url_for('delete_reservation', res_id=data[0]) }}" method="post">
-    <button class="delete-btn" type="submit">Delete Reservation</button>
-  </form>
-
   <div class="back-link">
-    <a href="{{ url_for('rental_shops') }}">← Back to Dashboard</a>
+    <a href="{{ url_for('customers') }}">← Back to Dashboard</a>
   </div>
 </div>
 

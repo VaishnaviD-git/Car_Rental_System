@@ -267,7 +267,7 @@ def edit_customer():
         customer = cursor.fetchone()
         cursor.close()
         flash("Information updated successfully!", 'success')
-        return render_template('customers.html', customer=customer, vehicles=booked_vehicles)
+        return redirect('customers')
 
     # GET request: show current customer info
     cursor.execute("SELECT * FROM customers WHERE Id = %s", (cus_id,))
