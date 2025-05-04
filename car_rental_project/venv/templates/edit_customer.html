@@ -1,73 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Edit Customer Info</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
-            padding: 50px;
-        }
+  <meta charset="UTF-8">
+  <title>Edit Customer Info - Travelania</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
 
-        form {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            max-width: 500px;
-            margin: auto;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
+    body {
+      background: url('https://www.automotiveaddicts.com/wp-content/uploads/2021/06/car-road-trip.jpg') no-repeat center center/cover;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+      animation: fadeIn 1s ease-in;
+      color: white;
+    }
 
-        label {
-            display: block;
-            margin-top: 15px;
-            font-weight: bold;
-        }
+    .overlay-box {
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 2.5rem 3rem;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      animation: slideIn 1s ease;
+    }
 
-        input[type="text"], textarea {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #80e0e9;
+    }
 
-        button {
-            margin-top: 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+      color: #e3e4a1;
+    }
 
-        button:hover {
-            background-color: #0056b3;
-        }
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 12px;
+      margin-top: 6px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      background-color: #e4e4e4;
+      font-size: 15px;
+      transition: border-color 0.3s ease;
+    }
 
-    </style>
+    input[type="text"]:focus,
+    textarea:focus {
+      border-color: #b8c1ec;
+      outline: none;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    button {
+      margin-top: 25px;
+      width: 100%;
+      background-color: #b8c1ec;
+      color: #2d3142;
+      border: none;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    button:hover {
+      background-color: #a0b1e3;
+      transform: scale(1.03);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(50px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
 <body>
 
+  <div class="overlay-box">
     <form method="POST">
-        <h2>Edit Your Information</h2>
+      <h2>Edit Your Information</h2>
 
-        <label for="name">Name</label>
-        <input type="text" id="name" name="name" value="{{ customer[1] }}" required>
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name" value="{{ customer[1] }}" required>
 
-        <label for="adhaar_no">Aadhaar Number</label>
-        <input type="text" id="adhaar_no" name="adhaar_no" value="{{ customer[2] }}" required>
+      <label for="adhaar_no">Aadhaar Number</label>
+      <input type="text" id="adhaar_no" name="adhaar_no" value="{{ customer[2] }}" required>
 
-        <label for="license">Driving License</label>
-        <input type="text" id="license" name="license" value="{{ customer[3] }}" required>
+      <label for="license">Driving License</label>
+      <input type="text" id="license" name="license" value="{{ customer[3] }}" required>
 
-        <label for="address">Permanent Address</label>
-        <textarea id="address" name="address" required>{{ customer[4] }}</textarea>
+      <label for="address">Permanent Address</label>
+      <textarea id="address" name="address" required>{{ customer[4] }}</textarea>
 
-        <button type="submit">Save Changes</button>
+      <button type="submit">Save Changes</button>
     </form>
+  </div>
 
 </body>
 </html>

@@ -1,61 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Car Rental - Welcome</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
-            color: #333;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Travelania - Car Rental</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
 
-        h1 {
-            font-size: 3em;
-            margin-bottom: 10px;
-        }
+    body {
+      background: url('https://inspiredpixel.wordpress.com/wp-content/uploads/2012/08/car-photography-uk-automotive-professional-tim-wallace.jpg') no-repeat center center/cover;
+      height: 100vh;
+      color: white;
+    }
 
-        h2 {
-            font-weight: normal;
-            margin-bottom: 40px;
-        }
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 2rem;
+    }
 
-        .btn-container {
-            display: flex;
-            gap: 20px;
-        }
+    .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
 
-        .btn {
-            padding: 12px 25px;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
-        }
+    .nav-buttons {
+      display: flex;
+      gap: 1rem;
+    }
 
-        .btn:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    .nav-buttons a {
+      padding: 0.6rem 1.2rem;
+      background-color: #ffb6c1;
+      color: #222;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+
+    .nav-buttons a:hover {
+      background-color: #ff8aa1;
+    }
+
+    .main-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      height: 80vh;
+      padding: 2rem 4rem;
+    }
+
+    .main-content h1 {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .main-content p {
+      font-size: 1.2rem;
+      max-width: 600px;
+      color: #ddd;
+    }
+
+    @media (max-width: 768px) {
+      .main-content {
+        padding: 2rem;
+        align-items: center;
+        text-align: center;
+      }
+
+      .main-content h1 {
+        font-size: 2.5rem;
+      }
+
+      .main-content p {
+        font-size: 1rem;
+      }
+    }
+  </style>
 </head>
 <body>
-
-    <h1>Travelania</h1>
-    <h2>New Roads, New Memories</h2>
-
-    <div class="btn-container">
-        <a href="{{ url_for('login') }}" class="btn">Login</a>
-        <a href="{{ url_for('register') }}" class="btn">Register</a>
+  <nav>
+    <div class="logo">Travelania</div>
+    <div class="nav-buttons">
+      <a href="/login">Login</a>
+      <a href="/register">Register</a>
     </div>
+  </nav>
 
+  <div class="main-content">
+    <h1>Premium Car Rental Services</h1>
+    <p>
+      Affordable and flexible car rentals for every journey. Choose from a wide range
+      of vehicles for hassle-free travel experiences.
+    </p>
+  </div>
 </body>
 </html>
