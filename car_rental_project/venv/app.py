@@ -341,29 +341,6 @@ def instant_order_info(ord_id):
     cursor.close()
     return render_template('instant_order_info.html', data=data)
 
-@app.route('/delete_reservation/<int:res_id>', methods=['POST'])
-def delete_reservation(res_id):
-    cursor = mysql.connection.cursor()
-    cursor.execute("SELECT * FROM reservation WHERE Re_id = %s",(res_id,))
-    vehicle_no = cursor.fetchone()
-    cursor.execute("UPDATE vehicles SET Cus_id = NULL WHERE NoPlate = %s",(vehicle_no[6],))
-    cursor.execute("DELETE FROM reservation WHERE Re_id = %s", (res_id,))
-    mysql.connection.commit()
-    cursor.close()
-    flash("Reservation deleted.", 'success')
-    return redirect(url_for('customers'))
-
-@app.route('/delete_instant_order/<int:ord_id>', methods=['POST'])
-def delete_instant_order(ord_id):
-    cursor = mysql.connection.cursor()
-    cursor.execute("SELECT * FROM instantorders WHERE Ord_id = %s",(ord_id,))
-    vehicle_no = cursor.fetchone()
-    cursor.execute("UPDATE vehicles SET Cus_id = NULL WHERE NoPlate = %s",(vehicle_no[4],))
-    cursor.execute("DELETE FROM instantorders WHERE Ord_id = %s", (ord_id,))
-    mysql.connection.commit()
-    cursor.close()
-    flash("Instant order deleted.", 'success')
-    return redirect(url_for('customers'))
 
 @app.route('/vehicle_info_customers/<vehicle_no>', methods=['GET'])
 def vehicle_info_customers(vehicle_no):
@@ -544,13 +521,96 @@ def rental_instantorders(rental_id):
     cursor.execute("""
         SELECT io.Ord_id, io.Cus_id, io.Location, io.TimeSlot, io.VehicleNo, c.Name
         FROM instantorders io
-        JOIN vehicles v ON io.VehicleNo = v.NoPlate
+        LEFT JOIN vehicles v ON io.VehicleNo = v.NoPlate
         JOIN customers c ON io.Cus_id = c.Id
         WHERE v.RentalId = %s
     """, (rental_id,))
     orders = cursor.fetchall()
     cursor.close()
     return render_template('rental_instantorders.html', orders=orders)
+
+@app.route('/vehicle_info_payment/<vehicle_no>', methods=['GET'])
+def vehicle_info_payment(vehicle_no):
+    # Fetch vehicle details along with the rental shop information
+    if 'user' not in session or session.get('role') != 'rental_shop':
+        flash("Please log in as a owner to view this page.", 'error')
+        return redirect(url_for('login'))
+    cursor = mysql.connection.cursor()
+    cursor.execute("""
+        SELECT v.NoPlate, v.Type, v.Model, v.Seats, r.Name AS RentalName, r.Location AS RentalLocation
+        FROM vehicles v
+        JOIN rentalshops r ON v.RentalId = r.Id
+        WHERE v.NoPlate = %s
+    """, (vehicle_no,))
+    vehicle_info = cursor.fetchone()
+    cursor.close()
+
+    if vehicle_info:
+        return render_template('vehicle_info_payment.html', vehicle_info=vehicle_info)
+    else:
+        return "Vehicle not found", 404
+
+@app.route('/delete_instant_order/<int:ord_id>', methods=['GET'])
+def delete_instant_order(ord_id):
+    cursor = mysql.connection.cursor()
+    
+    # Get VehicleNo from the order
+    cursor.execute("SELECT VehicleNo FROM instantorders WHERE Ord_id = %s", (ord_id,))
+    vehicle_data = cursor.fetchone()
+    vehicle_no = vehicle_data[0] if vehicle_data else None
+
+    rental_id = None
+    if vehicle_no:
+        # Get RentalId using VehicleNo
+        cursor.execute("SELECT RentalId FROM vehicles WHERE NoPlate = %s", (vehicle_no,))
+        rental_row = cursor.fetchone()
+        rental_id = rental_row[0] if rental_row else None
+
+        # Clear vehicle assignment
+        cursor.execute("UPDATE vehicles SET Cus_id = NULL WHERE NoPlate = %s", (vehicle_no,))
+
+    # Delete the instant order
+    cursor.execute("DELETE FROM instantorders WHERE Ord_id = %s", (ord_id,))
+    mysql.connection.commit()
+    cursor.close()
+
+    # Redirect with fallback if rental_id is None
+    if rental_id:
+        return redirect(url_for('rental_instantorders', rental_id=rental_id))
+    else:
+        flash("Rental ID not found. Redirecting to owner dashboard.", 'warning')
+        return redirect(url_for('login'))  # Use an appropriate fallback route
+
+@app.route('/delete_reservation/<int:res_id>', methods=['POST'])
+def delete_reservation(res_id):
+    cursor = mysql.connection.cursor()
+
+    # Get vehicle number from reservation
+    cursor.execute("SELECT VehicleNo FROM reservation WHERE Re_id = %s", (res_id,))
+    result = cursor.fetchone()
+    vehicle_no = result[0] if result else None
+
+    # Get rental ID if vehicle exists
+    rental_id = None
+    if vehicle_no:
+        cursor.execute("SELECT RentalId FROM vehicles WHERE NoPlate = %s", (vehicle_no,))
+        vehicle = cursor.fetchone()
+        rental_id = vehicle[0] if vehicle else None
+
+        # Unassign customer from vehicle
+        cursor.execute("UPDATE vehicles SET Cus_id = NULL WHERE NoPlate = %s", (vehicle_no,))
+
+    # Delete the reservation
+    cursor.execute("DELETE FROM reservation WHERE Re_id = %s", (res_id,))
+    mysql.connection.commit()
+    cursor.close()
+
+    flash("Reservation deleted.", 'success')
+
+    if rental_id:
+        return redirect(url_for('rental_reservations', rental_id=rental_id))
+    else:
+        return redirect(url_for('rental_shops'))  # Fallback
 
 
 if __name__ == '__main__':
