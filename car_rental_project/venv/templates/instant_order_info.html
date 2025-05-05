@@ -77,10 +77,9 @@
   <p><strong>Location:</strong> {{ data[2] }}</p>
   <p><strong>Time Slot:</strong> {{ data[3] }}</p>
   <p><strong>Vehicle No:</strong> {{ data[4] or "Not Assigned" }}</p>
-
-  <form action="{{ url_for('delete_instant_order', ord_id=data[0]) }}" method="post">
-    <button class="delete-btn" type="submit">Delete Order</button>
-  </form>
+</div><br><br>
+<div class="back-link">
+  <a href="{{ url_for('customers') }}">← Back to Dashboard</a>
 </div>
 
 </body>

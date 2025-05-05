@@ -77,15 +77,18 @@
 <body>
 
   <div class="overlay-box">
-    <h2>Instant Order #{{ data[0] }}</h2>
-    <p><strong>Location:</strong> {{ data[2] }}</p>
-    <p><strong>Time Slot:</strong> {{ data[3] }}</p>
-    <p><strong>Vehicle No:</strong> {{ data[4] or "Not Assigned" }}</p>
-
-    <form action="{{ url_for('delete_instant_order', ord_id=data[0]) }}" method="post">
-      <button class="delete-btn" type="submit">Delete Order</button>
+    <h2>Place Instant Order</h2>
+    <form action="{{ url_for('instant_order') }}" method="post">
+      <label for="location"><strong>Location:</strong></label>
+      <input type="text" id="location" name="location" required><br><br>
+  
+      <label for="time_slot"><strong>Time Slot:</strong></label>
+      <input type="time" id="time_slot" name="time_slot" required><br><br>
+  
+      <button class="submit-btn" type="submit">Submit Order</button>
     </form>
   </div>
+  
 
 </body>
 </html>

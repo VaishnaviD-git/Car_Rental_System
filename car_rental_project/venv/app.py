@@ -56,7 +56,8 @@ def login():
 def rental_shops():
     if 'user' not in session or session.get('role') != 'rental_shop':
         return redirect(url_for('login'))
-    return render_template('rental_shop.html')
+    rental_id = session['user']
+    return render_template('rental_shop.html',rental_id=rental_id)
 
 @app.route('/customers')
 def customers():
@@ -507,6 +508,40 @@ def owner_edit():
     shop = cursor.fetchone()
     cursor.close()
     return render_template("owner_edit.html", shop=shop)
+
+@app.route('/rental_reservations/<int:rental_id>')
+def rental_reservations(rental_id):
+    if 'user' not in session or session.get('role') != 'rental_shop':
+        flash("You must be logged in as an owner to view this page.", 'error')
+        return redirect(url_for('login'))
+
+    cursor = mysql.connection.cursor()
+    cursor.execute("""
+        SELECT r.Re_id, c.Name, v.NoPlate, v.Model, r.Location, r.FromDate, r.ToDate, r.TimeSlot
+        FROM reservation r
+        JOIN customers c ON r.Cus_id = c.Id
+        JOIN vehicles v ON r.VehicleNo = v.NoPlate
+        WHERE v.RentalId = %s
+    """, (rental_id,))
+    reservations = cursor.fetchall()
+    cursor.close()
+
+    return render_template('rental_reservations.html', reservations=reservations)
+
+@app.route('/rental_instantorders/<int:rental_id>')
+def rental_instantorders(rental_id):
+    cursor = mysql.connection.cursor()
+    cursor.execute("""
+        SELECT io.Ord_id, io.Cus_id, io.Location, io.TimeSlot, io.VehicleNo, c.Name
+        FROM instantorders io
+        JOIN vehicles v ON io.VehicleNo = v.NoPlate
+        JOIN customers c ON io.Cus_id = c.Id
+        WHERE v.RentalId = %s
+    """, (rental_id,))
+    orders = cursor.fetchall()
+    cursor.close()
+    return render_template('rental_instantorders.html', orders=orders)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rental Shop Instant Orders</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f1f1f1;
+            padding: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 25px;
+            color: #333;
+        }
+
+        table {
+            margin: auto;
+            width: 90%;
+            border-collapse: collapse;
+            background-color: white;
+        }
+
+        th, td {
+            padding: 14px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .view-btn {
+            background-color: #28a745;
+            border: none;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .view-btn:hover {
+            background-color: #218838;
+        }
+
+        .nav {
+            margin-bottom: 20px;
+        }
+
+        .nav a {
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .nav a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Instant Orders for Your Rental Shop</h1>
+
+    {% if orders %}
+    <table>
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Customer ID</th>
+                <th>Location</th>
+                <th>Time Slot</th>
+                <th>Vehicle No</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>{{ order[0] }}</td>
+                <td>{{ order[1] }}</td>
+                <td>{{ order[2] }}</td>
+                <td>{{ order[3] }}</td>
+                <td>{{ order[4] or "Not Assigned" }}</td>
+                <td>
+                    {% if order[4] %}
+                    <a href="{{ url_for('vehicle_info', vehicle_no=order[4]) }}">
+                        <button class="view-btn">View Vehicle</button>
+                    </a>
+                    {% else %}
+                    N/A
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p>No instant orders found for your rental shop.</p>
+    {% endif %}
+
+</body>
+</html>

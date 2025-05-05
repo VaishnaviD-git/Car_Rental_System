@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reservations for Rental Shop</title>
+    <style>
+        body {
+            font-family: Arial;
+            padding: 40px;
+            background-color: #f4f4f4;
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h2>Reservations for Vehicles in Your Rental Shop</h2>
+    {% if reservations %}
+    <table>
+        <thead>
+            <tr>
+                <th>Reservation ID</th>
+                <th>Customer Name</th>
+                <th>Vehicle No</th>
+                <th>Model</th>
+                <th>Location</th>
+                <th>From Date</th>
+                <th>To Date</th>
+                <th>Time Slot</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for res in reservations %}
+            <tr>
+                <td>{{ res[0] }}</td>
+                <td>{{ res[1] }}</td>
+                <td>{{ res[2] }}</td>
+                <td>{{ res[3] }}</td>
+                <td>{{ res[4] }}</td>
+                <td>{{ res[5] }}</td>
+                <td>{{ res[6] }}</td>
+                <td>{{ res[7] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No reservations found for your rental shop.</p>
+    {% endif %}
+</body>
+</html>
