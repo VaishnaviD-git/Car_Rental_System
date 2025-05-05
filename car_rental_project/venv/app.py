@@ -131,36 +131,46 @@ def register():
 
 @app.route('/reservation', methods=['GET', 'POST'])
 def reservation():
-    # Only allow customers to reserve
     if 'user' not in session or session.get('role') != 'customer':
         flash("Please log in as a customer to make a reservation.", 'error')
         return redirect(url_for('login'))
 
     if request.method == 'POST':
-        customer_id = session['user']  # Get customer ID from session
+        customer_id = session['user']
         from_date = request.form['from_date']
         to_date = request.form['to_date']
         location = request.form['location']
         time_slot = request.form['time_slot']
 
-        # Validate date logic
         if datetime.strptime(from_date, '%Y-%m-%d') >= datetime.strptime(to_date, '%Y-%m-%d'):
             flash("From Date must be less than To Date.", 'error')
             return redirect(url_for('reservation'))
 
-        # Insert reservation
         cur = mysql.connection.cursor()
+        
+        # ✅ Check if a pending reservation exists
+        cur.execute("""
+            SELECT Re_id FROM reservation 
+            WHERE Cus_id = %s AND VehicleNo IS NULL
+        """, (customer_id,))
+        existing = cur.fetchone()
+
+        if existing:
+            flash("You already have a pending reservation. Please complete it before making another.", 'warning')
+            cur.close()
+            return redirect(url_for('vehicles', location=location))
+
+        # Proceed with reservation insertion
         cur.execute("""
             INSERT INTO reservation (Cus_id, FromDate, ToDate, Location, TimeSlot)
             VALUES (%s, %s, %s, %s, %s)
         """, (customer_id, from_date, to_date, location, time_slot))
         mysql.connection.commit()
         cur.close()
-
-        flash("Reservation successful!", 'success')
         return redirect(url_for('vehicles', location=location))
 
     return render_template('reservation.html')
+
 
 @app.route('/vehicles', methods=['GET'])
 def vehicles():
