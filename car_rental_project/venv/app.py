@@ -504,30 +504,41 @@ def rental_reservations(rental_id):
 
     cursor = mysql.connection.cursor()
     cursor.execute("""
-        SELECT r.Re_id, c.Name, v.NoPlate, v.Model, r.Location, r.FromDate, r.ToDate, r.TimeSlot
+        SELECT r.Re_id, c.Id, r.FromDate, r.ToDate, r.Location, r.TimeSlot, r.VehicleNo
         FROM reservation r
         JOIN customers c ON r.Cus_id = c.Id
         JOIN vehicles v ON r.VehicleNo = v.NoPlate
         WHERE v.RentalId = %s
     """, (rental_id,))
     reservations = cursor.fetchall()
-    cursor.close()
 
-    return render_template('rental_reservations.html', reservations=reservations)
+    # Get Re_ids with payments
+    cursor.execute("SELECT Re_id FROM payments WHERE Re_id IS NOT NULL")
+    paid_res_ids = [row[0] for row in cursor.fetchall()]
+    res_payments = {re_id: True for re_id in paid_res_ids}
+
+    cursor.close()
+    return render_template('rental_reservations.html', reservations=reservations, rental_id=rental_id, res_payments=res_payments)
+
 
 @app.route('/rental_instantorders/<int:rental_id>')
 def rental_instantorders(rental_id):
+    if 'user' not in session or session.get('role') != 'rental_shop':
+        flash("You must be logged in as an owner to view this page.", 'error')
+        return redirect(url_for('login'))
+
     cursor = mysql.connection.cursor()
     cursor.execute("""
-        SELECT io.Ord_id, io.Cus_id, io.Location, io.TimeSlot, io.VehicleNo, c.Name
-        FROM instantorders io
-        LEFT JOIN vehicles v ON io.VehicleNo = v.NoPlate
-        JOIN customers c ON io.Cus_id = c.Id
+        SELECT o.Ord_id, o.Cus_id, o.Location, o.TimeSlot, o.VehicleNo, p.Transaction_id
+        FROM instantorders o
+        JOIN vehicles v ON o.VehicleNo = v.NoPlate
+        LEFT JOIN payments p ON o.Ord_id = p.Ord_id
         WHERE v.RentalId = %s
     """, (rental_id,))
     orders = cursor.fetchall()
     cursor.close()
-    return render_template('rental_instantorders.html', orders=orders)
+
+    return render_template('rental_instantorders.html', orders=orders, rental_id = rental_id)
 
 @app.route('/vehicle_info_payment/<vehicle_no>', methods=['GET'])
 def vehicle_info_payment(vehicle_no):
@@ -725,6 +736,45 @@ def add_payment_order(ord_id):
             return redirect(url_for('dashboard'))  # Fallback page
 
     return render_template('add_payment_form.html', res_or_ord_id=ord_id, type='order')
+
+@app.route('/view_payment_order/<int:ord_id>/<int:rental_id>')
+def view_payment_order(ord_id, rental_id):
+    cursor = mysql.connection.cursor()
+    cursor.execute("""
+        SELECT p.Transaction_id, p.Total_Amount, ec.Amount, ec.Reason, d.Amount, d.Reason
+        FROM payments p
+        LEFT JOIN extracharges ec ON p.Transaction_id = ec.Transaction_id
+        LEFT JOIN discounts d ON p.Transaction_id = d.Transaction_id
+        WHERE p.Ord_id = %s
+    """, (ord_id,))
+    payment_details = cursor.fetchone()
+    cursor.close()
+
+    if not payment_details:
+        flash("No payment found for this order.", "warning")
+        return redirect(url_for('rental_instantorders', rental_id=rental_id))
+
+    return render_template('view_payment_order.html', payment=payment_details, ord_id=ord_id, rental_id=rental_id)
+
+@app.route('/view_payment_reservation/<int:res_id>/<int:rental_id>')
+def view_payment_reservation(res_id, rental_id):
+    cursor = mysql.connection.cursor()
+    cursor.execute("""
+        SELECT p.Transaction_id, p.Total_Amount, ec.Amount, ec.Reason, d.Amount, d.Reason
+        FROM payments p
+        LEFT JOIN extracharges ec ON p.Transaction_id = ec.Transaction_id
+        LEFT JOIN discounts d ON p.Transaction_id = d.Transaction_id
+        WHERE p.Re_id = %s
+    """, (res_id,))
+    payment_details = cursor.fetchone()
+    cursor.close()
+
+    if not payment_details:
+        flash("No payment found for this reservation.", "warning")
+        return redirect(url_for('rental_reservations', rental_id=rental_id))
+
+    return render_template('view_payment_reservation.html', payment=payment_details, res_id=res_id, rental_id=rental_id)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

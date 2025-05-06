@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Instant Order Payment Details</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f1f1f1; padding: 30px; text-align: center; }
+        h1 { color: #333; margin-bottom: 20px; }
+        table { margin: auto; background: white; border-collapse: collapse; width: 60%; }
+        th, td { padding: 10px; border: 1px solid #ccc; }
+        th { background-color: #007bff; color: white; }
+        .back-link a { margin-top: 20px; display: inline-block; text-decoration: none; color: #007bff; }
+    </style>
+</head>
+<body>
+    <h1>Payment Details for Order #{{ ord_id }}</h1>
+    <table>
+        <tr><th>Transaction ID</th><td>{{ payment[0] }}</td></tr>
+        <tr><th>Total Amount</th><td>{{ payment[1] }}</td></tr>
+        <tr><th>Extra Charge</th><td>{{ payment[2] or "N/A" }}</td></tr>
+        <tr><th>Reason</th><td>{{ payment[3] or "N/A" }}</td></tr>
+        <tr><th>Discount</th><td>{{ payment[4] or "N/A" }}</td></tr>
+        <tr><th>Reason</th><td>{{ payment[5] or "N/A" }}</td></tr>
+    </table>
+
+    <div class="back-link">
+        <a href="{{ url_for('rental_instantorders', rental_id=rental_id) }}">← Back to Instant Orders</a>
+    </div>
+</body>
+</html>

@@ -99,12 +99,19 @@
                     <a href="{{ url_for('vehicle_info_payment', vehicle_no=res[6]) }}">
                         <button class="view-btn">View Vehicle</button>
                     </a>
-                    <form action="{{ url_for('delete_reservation', res_id=res[0]) }}" method="post" style="display:inline;">
-                        <button class="view-btn" style="background-color: red;">Delete</button>
-                    </form>
-                    <form action="{{ url_for('add_payment_reservation', res_id=res[0]) }}" method="post" style="display:inline;">
-                        <button class="view-btn" style="background-color: #17a2b8;">Add Payment</button>
-                    </form>
+                    {% if res[0] in res_payments %}
+                        <a href="{{ url_for('view_payment_reservation', res_id=res[0], rental_id=rental_id) }}">
+                            <button class="view-btn" style="background-color: #6c757d;">View Payment</button>
+                        </a>
+                        {% else %}
+                        <form action="{{ url_for('add_payment_reservation', res_id=res[0]) }}" method="post" style="display:inline;">
+                            <button class="view-btn" style="background-color: #17a2b8;">Add Payment</button>
+                        </form>
+                        <form action="{{ url_for('delete_reservation', res_id=res[0]) }}" method="post" style="display:inline;">
+                            <button class="view-btn" style="background-color: red;">Delete</button>
+                        </form>
+                        {% endif %}
+
                     {% else %}
                     N/A
                     {% endif %}
