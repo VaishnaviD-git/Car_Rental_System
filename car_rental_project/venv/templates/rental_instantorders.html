@@ -95,9 +95,12 @@
                     <a href="{{ url_for('vehicle_info_payment', vehicle_no=order[4]) }}">
                         <button class="view-btn">View Vehicle</button>
                     </a>
-                    <a href="{{ url_for('delete_instant_order', ord_id=order[0]) }}" method ="post">
-                        <button class="submit">Delete</button>
-                    </a>
+                    <form action="{{ url_for('delete_instant_order', ord_id=order[0]) }}" method="post" style="display:inline;">
+                        <button class="view-btn" style="background-color: red;">Delete</button>
+                    </form>
+                    <form action="{{ url_for('add_payment_order', ord_id=order[0]) }}" method="post" style="display:inline;">
+                        <button class="view-btn" style="background-color: #17a2b8;">Add Payment</button>
+                    </form>
                     {% else %}
                     N/A
                     {% endif %}
@@ -109,8 +112,9 @@
     {% else %}
         <p>No instant orders found for your rental shop.</p>
     {% endif %}
+
     <div class="back-link">
-        <a href="{{ url_for('rental_shops') }}"> Back to dashboard </a>
+        <a href="{{ url_for('rental_shops') }}">Back to dashboard</a>
     </div>
 </body>
 </html>

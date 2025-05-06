@@ -612,6 +612,119 @@ def delete_reservation(res_id):
     else:
         return redirect(url_for('rental_shops'))  # Fallback
 
+# Route for reservation payment
+@app.route('/add_payment_reservation/<int:res_id>', methods=['GET', 'POST'])
+def add_payment_reservation(res_id):
+    if request.method == 'POST':
+        transaction_id = request.form.get('transaction_id')
+        total_amount = request.form.get('total_amount')
+        extra_charge = request.form.get('extra_charge')
+        extra_reason = request.form.get('extra_reason')
+        discount = request.form.get('discount')
+        discount_reason = request.form.get('discount_reason')
+
+        if not transaction_id or not total_amount:
+            flash("Transaction ID and total amount are required.", "danger")
+            return redirect(request.url)
+
+        cursor = mysql.connection.cursor()
+        try:
+            # Insert payment
+            cursor.execute("INSERT INTO payments (Transaction_id, Re_id, Total_Amount) VALUES (%s, %s, %s)",
+                           (transaction_id, res_id, total_amount))
+
+            # Insert extra charges if provided
+            if extra_charge and extra_reason:
+                cursor.execute("INSERT INTO extracharges (Transaction_id, Amount, Reason) VALUES (%s, %s, %s)",
+                               (transaction_id, extra_charge, extra_reason))
+
+            # Insert discounts if provided
+            if discount and discount_reason:
+                cursor.execute("INSERT INTO discounts (Transaction_id, Amount, Reason) VALUES (%s, %s, %s)",
+                               (transaction_id, discount, discount_reason))
+
+            mysql.connection.commit()
+            flash("Reservation payment recorded successfully.", "success")
+        except Exception as e:
+            mysql.connection.rollback()
+            flash(f"Error occurred: {str(e)}", "danger")
+            return redirect(request.url)
+        finally:
+            # Fetch rental shop ID for redirection
+            cursor.execute("""
+                SELECT v.RentalId
+                FROM reservation r
+                JOIN vehicles v ON r.VehicleNo = v.NoPlate
+                WHERE r.Re_id = %s
+            """, (res_id,))
+            rental_result = cursor.fetchone()
+            cursor.close()
+
+        if rental_result:
+            rental_id = rental_result[0]
+            return redirect(url_for('rental_reservations', rental_id=rental_id))
+        else:
+            flash("Could not determine the rental shop for this reservation.", "warning")
+            return redirect(url_for('login'))  # Fallback page
+
+    return render_template('add_payment_form.html', res_or_ord_id=res_id, type='reservation')
+
+# Route for instant order payment
+@app.route('/add_payment_order/<int:ord_id>', methods=['GET', 'POST'])
+def add_payment_order(ord_id):
+    if request.method == 'POST':
+        transaction_id = request.form.get('transaction_id')
+        total_amount = request.form.get('total_amount')
+        extra_charge = request.form.get('extra_charge')
+        extra_reason = request.form.get('extra_reason')
+        discount = request.form.get('discount')
+        discount_reason = request.form.get('discount_reason')
+
+        if not transaction_id or not total_amount:
+            flash("Transaction ID and total amount are required.", "danger")
+            return redirect(request.url)
+
+        cursor = mysql.connection.cursor()
+        try:
+            # Insert payment
+            cursor.execute("INSERT INTO payments (Transaction_id, Ord_id, Total_Amount) VALUES (%s, %s, %s)",
+                           (transaction_id, ord_id, total_amount))
+
+            # Insert extra charges if provided
+            if extra_charge and extra_reason:
+                cursor.execute("INSERT INTO extracharges (Transaction_id, Amount, Reason) VALUES (%s, %s, %s)",
+                               (transaction_id, extra_charge, extra_reason))
+
+            # Insert discounts if provided
+            if discount and discount_reason:
+                cursor.execute("INSERT INTO discounts (Transaction_id, Amount, Reason) VALUES (%s, %s, %s)",
+                               (transaction_id, discount, discount_reason))
+
+            mysql.connection.commit()
+            flash("Instant order payment recorded successfully.", "success")
+        except Exception as e:
+            mysql.connection.rollback()
+            flash(f"Error occurred: {str(e)}", "danger")
+            return redirect(request.url)
+        finally:
+            # Fetch rental shop ID for redirection
+            cursor.execute("""
+                SELECT v.RentalId
+                FROM instantorders o
+                JOIN vehicles v ON o.VehicleNo = v.NoPlate
+                WHERE o.Ord_id = %s
+            """, (ord_id,))
+            rental_result = cursor.fetchone()
+            cursor.close()
+
+        if rental_result:
+            rental_id = rental_result[0]
+            return redirect(url_for('rental_instantorders', rental_id=rental_id))
+        else:
+            flash("Could not determine the rental shop for this order.", "warning")
+            return redirect(url_for('dashboard'))  # Fallback page
+
+    return render_template('add_payment_form.html', res_or_ord_id=ord_id, type='order')
 
 if __name__ == '__main__':
     app.run(debug=True)
