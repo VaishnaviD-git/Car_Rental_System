@@ -1,96 +1,162 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Add Payment</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #eef2f3;
-            padding: 40px;
-            max-width: 600px;
-            margin: auto;
-        }
+  <meta charset="UTF-8" />
+  <title>Add Payment</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-mcdsZ7x+YBd2JqFZ3bFMPQajIKN1mrTQrJrP+oAQFqgE0UqRLtQFcjYwTrFaQXzIhNwDHMiYwNeLU33NH+7YbQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    body {
+      margin: 0;
+      padding: 40px 20px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: url('https://innoviti.com/wp-content/uploads/2022/10/Features-of-digital-Payment-Gateways-02.jpg') no-repeat center center/cover;
+      min-height: 95vh;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      color: white;
+    }
 
-        h1 {
-            text-align: center;
-            margin-bottom: 25px;
-            color: #333;
-        }
+    form {
+      background: rgba(0, 0, 0, 0.55);
+   
+      padding: 25px;
+      border-radius: 15px;
+      align: left;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+      width: 100%;
+      max-width: 500px;
+      margin-top: 20px;  /* adjust as needed */
+      margin-left: 20px; /* push a bit from the left edge */
+    }
 
-        form {
-            background-color: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
+    h1 {
+      text-align: center;
+      color: #00e5ff;
+      margin-bottom: 25px;
+    }
 
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
+    .input-group {
+      position: relative;
+      margin-bottom: 15px;
+    }
 
-        input, textarea {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
+    .input-group i {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: #ccc;
+    }
 
-        button {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 16px;
-        }
+    .input-group input,
+    .input-group textarea {
+      width: 100%;
+      padding: 5px 5px 8px 3px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
 
-        button:hover {
-            background-color: #0056b3;
-        }
+    input::placeholder,
+    textarea::placeholder {
+      color: #ccc;
+    }
 
-        .back-link {
-            margin-top: 15px;
-            text-align: center;
-        }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #ddd;
+    }
 
-        .back-link a {
-            text-decoration: none;
-            color: #007bff;
-        }
+    .input-group small {
+      color: #aaa;
+      font-size: 0.8em;
+    }
 
-        .back-link a:hover {
-            text-decoration: underline;
-        }
-    </style>
+    button {
+      width: 100%;
+      background-color: #00bcd4;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0097a7;
+    }
+
+    .back-link {
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .back-link a {
+      text-decoration: none;
+      color: #00e5ff;
+    }
+
+    .back-link a:hover {
+      text-decoration: underline;
+    }
+
+    .input-group input:invalid,
+    .input-group textarea:invalid {
+      border-color: #ff5555;
+    }
+  </style>
 </head>
 <body>
+  <form method="POST">
     <h1>Add Payment</h1>
-    <form method="POST">
-        <label for="transaction_id">Transaction ID *</label>
-        <input type="text" name="transaction_id" required>
 
-        <label for="total_amount">Total Amount *</label>
-        <input type="number" name="total_amount" step="0.01" required>
+    <div class="input-group">
+      <label for="transaction_id">Transaction ID *</label>
+      <i class="fas fa-receipt"></i>
+      <input type="text" name="transaction_id" required placeholder="Enter transaction ID">
+      <small>This ID must match your transaction proof.</small>
+    </div>
 
-        <label for="extra_charge">Extra Charge (Optional)</label>
-        <input type="number" name="extra_charge" step="0.01">
+    <div class="input-group">
+      <label for="total_amount">Total Amount *</label>
+      <i class="fas fa-rupee-sign"></i>
+      <input type="number" name="total_amount" step="0.01" required placeholder="Enter total amount">
+    </div>
 
-        <label for="extra_reason">Reason for Extra Charge</label>
-        <textarea name="extra_reason" rows="2"></textarea>
+    <div class="input-group">
+      <label for="extra_charge">Extra Charge (Optional)</label>
+      <i class="fas fa-plus-circle"></i>
+      <input type="number" name="extra_charge" step="0.01" placeholder="Any additional charge">
+    </div>
 
-        <label for="discount">Discount (Optional)</label>
-        <input type="number" name="discount" step="0.01">
+    <div class="input-group">
+      <label for="extra_reason">Reason for Extra Charge</label>
+      <i class="fas fa-pen"></i>
+      <textarea name="extra_reason" rows="2" placeholder="Reason for extra charge..."></textarea>
+    </div>
 
-        <label for="discount_reason">Reason for Discount</label>
-        <textarea name="discount_reason" rows="2"></textarea>
+    <div class="input-group">
+      <label for="discount">Discount (Optional)</label>
+      <i class="fas fa-tag"></i>
+      <input type="number" name="discount" step="0.01" placeholder="Discount amount">
+    </div>
 
-        <button type="submit">Submit Payment</button>
-    </form>
+    <div class="input-group">
+      <label for="discount_reason">Reason for Discount</label>
+      <i class="fas fa-comment-dots"></i>
+      <textarea name="discount_reason" rows="2" placeholder="Reason for discount..."></textarea>
+    </div>
 
+    <button type="submit">Submit Payment</button>
+
+    <div class="back-link">
+      <a href="{{ url_for('customer_home') }}">← Back to Dashboard</a>
+    </div>
+  </form>
 </body>
 </html>

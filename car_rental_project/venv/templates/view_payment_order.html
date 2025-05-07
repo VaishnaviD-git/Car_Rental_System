@@ -1,29 +1,96 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Instant Order Payment Details</title>
-    <style>
-        body { font-family: Arial, sans-serif; background-color: #f1f1f1; padding: 30px; text-align: center; }
-        h1 { color: #333; margin-bottom: 20px; }
-        table { margin: auto; background: white; border-collapse: collapse; width: 60%; }
-        th, td { padding: 10px; border: 1px solid #ccc; }
-        th { background-color: #007bff; color: white; }
-        .back-link a { margin-top: 20px; display: inline-block; text-decoration: none; color: #007bff; }
-    </style>
+  <title>Instant Order Payment Details</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background: url('https://i0.wp.com/blogrevamp.cashfree.com/wp-content/uploads/2021/04/BulkPaymentSystem.png?fit=1200%2C800&ssl=1') no-repeat center center/cover;
+      min-height: 100vh;
+      color: white;
+      padding: 1rem;
+      backdrop-filter: blur(4px);
+    }
+
+    .overlay-box {
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 2rem;
+      border-radius: 16px;
+      max-width: 700px;
+      width: 90%;
+      margin: 3rem auto;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #f5d0e6;
+    }
+
+    table {
+      margin: auto;
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      border-radius: 12px;
+      overflow: hidden;
+      color: #333;
+    }
+
+    th, td {
+      padding: 12px;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+
+    th {
+      background-color: #e2a3d7;
+      color: #333;
+      width: 40%;
+    }
+
+    td {
+      background-color: #f9f9f9;
+    }
+
+    .back-link {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .back-link a {
+      color: #b8c1ec;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .back-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
+  <div class="overlay-box">
     <h1>Payment Details for Order #{{ ord_id }}</h1>
     <table>
-        <tr><th>Transaction ID</th><td>{{ payment[0] }}</td></tr>
-        <tr><th>Total Amount</th><td>{{ payment[1] }}</td></tr>
-        <tr><th>Extra Charge</th><td>{{ payment[2] or "N/A" }}</td></tr>
-        <tr><th>Reason</th><td>{{ payment[3] or "N/A" }}</td></tr>
-        <tr><th>Discount</th><td>{{ payment[4] or "N/A" }}</td></tr>
-        <tr><th>Reason</th><td>{{ payment[5] or "N/A" }}</td></tr>
+      <tr><th>Transaction ID</th><td>{{ payment[0] }}</td></tr>
+      <tr><th>Total Amount</th><td>{{ payment[1] }}</td></tr>
+      <tr><th>Extra Charge</th><td>{{ payment[2] or "N/A" }}</td></tr>
+      <tr><th>Reason</th><td>{{ payment[3] or "N/A" }}</td></tr>
+      <tr><th>Discount</th><td>{{ payment[4] or "N/A" }}</td></tr>
+      <tr><th>Reason</th><td>{{ payment[5] or "N/A" }}</td></tr>
     </table>
 
     <div class="back-link">
-        <a href="{{ url_for('rental_instantorders', rental_id=rental_id) }}">← Back to Instant Orders</a>
+      <a href="{{ url_for('rental_instantorders', rental_id=rental_id) }}">← Back to Instant Orders</a>
     </div>
+  </div>
 </body>
 </html>

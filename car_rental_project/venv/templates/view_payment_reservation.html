@@ -1,59 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Reservation Payment Details</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #eef2f3;
-            padding: 40px;
-            text-align: center;
-        }
-        .container {
-            background-color: white;
-            padding: 30px;
-            border-radius: 12px;
-            width: 50%;
-            margin: auto;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        h2 {
-            color: #333;
-            margin-bottom: 20px;
-        }
-        .info {
-            text-align: left;
-            margin-top: 20px;
-        }
-        .info p {
-            font-size: 16px;
-            margin: 10px 0;
-        }
-        a {
-            display: inline-block;
-            margin-top: 30px;
-            text-decoration: none;
-            color: white;
-            background-color: #007bff;
-            padding: 10px 20px;
-            border-radius: 6px;
-        }
-        a:hover {
-            background-color: #0056b3;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Reservation Payment Details</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background: url('https://i0.wp.com/blogrevamp.cashfree.com/wp-content/uploads/2021/09/integrated-payment-systems.png?fit=5835%2C3001&ssl=1') no-repeat center center/cover;
+      min-height: 100vh;
+      color: white;
+      padding: 2rem;
+      backdrop-filter: blur(4px);
+    }
+
+    .overlay-box {
+      background-color: rgba(0, 0, 0, 0.65);
+      padding: 2.5rem;
+      border-radius: 16px;
+      max-width: 650px;
+      width: 90%;
+      margin: 4rem auto;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    }
+
+    h2 {
+      color: #f5d0e6;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .info {
+      text-align: left;
+      background-color: rgba(245, 245, 245, 0.9);
+      color: #333;
+      padding: 1.5rem;
+      border-radius: 12px;
+    }
+
+    .info p {
+      font-size: 16px;
+      margin: 12px 0;
+      line-height: 1.6;
+    }
+
+    a {
+      display: inline-block;
+      margin-top: 25px;
+      text-decoration: none;
+      color: #fff;
+      background-color: #007bff;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+
+    a:hover {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
 <body>
-<div class="container">
+  <div class="overlay-box">
     <h2>Payment Details for Reservation #{{ res_id }}</h2>
     <div class="info">
-        <p><strong>Transaction ID:</strong> {{ payment[0] }}</p>
-        <p><strong>Total Amount:</strong> ₹{{ payment[1] }}</p>
-        <p><strong>Extra Charge:</strong> ₹{{ payment[2] or 0 }} - {{ payment[3] or "None" }}</p>
-        <p><strong>Discount:</strong> ₹{{ payment[4] or 0 }} - {{ payment[5] or "None" }}</p>
+      <p><strong>Transaction ID:</strong> {{ payment[0] }}</p>
+      <p><strong>Total Amount:</strong> ₹{{ payment[1] }}</p>
+      <p><strong>Extra Charge:</strong> ₹{{ payment[2] or 0 }} — {{ payment[3] or "None" }}</p>
+      <p><strong>Discount:</strong> ₹{{ payment[4] or 0 }} — {{ payment[5] or "None" }}</p>
     </div>
-    <a href="{{ url_for('rental_reservations', rental_id=rental_id) }}">← Back to Reservations</a>
-</div>
+    <div style="text-align: center;">
+      <a href="{{ url_for('rental_reservations', rental_id=rental_id) }}">← Back to Reservations</a>
+    </div>
+  </div>
 </body>
 </html>

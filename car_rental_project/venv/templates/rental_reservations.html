@@ -1,131 +1,187 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Rental Shop Reservations</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f1f1f1;
-            padding: 30px;
-            text-align: center;
-        }
+  <meta charset="UTF-8">
+  <title>Rental Shop Reservations</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
 
-        h1 {
-            margin-bottom: 25px;
-            color: #333;
-        }
+    body {
+      background: url('https://thumbs.dreamstime.com/b/booking-form-hotel-room-reservation-stone-background-top-vie-booking-form-hotel-room-reservation-stone-table-background-117876955.jpg') no-repeat center center/cover;
+      min-height: 90vh;
+      color: white;
+      padding: 2rem;
+      backdrop-filter: blur(4px);
+      justify-content: flex-start;
+      align-items: center;
+        display: flex;
 
-        table {
-            margin: auto;
-            width: 90%;
-            border-collapse: collapse;
-            background-color: white;
-        }
+    }
 
-        th, td {
-            padding: 14px;
-            border: 1px solid #ccc;
-            text-align: center;
-        }
+    .overlay-box {
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 2rem;
+      border-radius: 16px;
+      max-width: 1000px;
+      width: 100%;
+      margin: 2rem auto;
+     
+      margin-top: 20px;  /* adjust as needed */
+      margin-left: 20px; /* push a bit from the left edge */
+      
+    }
 
-        th {
-            background-color: #007bff;
-            color: white;
-        }
+    h1 {
+      margin-bottom: 25px;
+      color: #f5d0e6;
+      text-align: center;
+    }
 
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
+    table {
+      margin: 2rem auto;
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      border-radius: 12px;
+      overflow: hidden;
+      color: #333;
+    }
 
-        .view-btn {
-            background-color: #28a745;
-            border: none;
-            color: white;
-            padding: 6px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+    th, td {
+      padding: 14px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
 
-        .view-btn:hover {
-            background-color: #218838;
-        }
+    th {
+      background-color: #e0bf83;
+      color: #333;
+    }
 
-        .nav {
-            margin-bottom: 20px;
-        }
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
 
-        .nav a {
-            text-decoration: none;
-            margin: 0 15px;
-            font-weight: bold;
-            color: #007bff;
-        }
+    .view-btn {
+      background-color: #28a745;
+      border: none;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 2px;
+    }
 
-        .nav a:hover {
-            text-decoration: underline;
-        }
-    </style>
+    .view-btn:hover {
+      background-color: #218838;
+    }
+
+    .view-btn.gray {
+      background-color: #6c757d;
+    }
+
+    .view-btn.gray:hover {
+      background-color: #4d555b;
+    }
+
+    .view-btn.blue {
+      background-color: #17a2b8;
+    }
+
+    .view-btn.blue:hover {
+      background-color: #137483;
+    }
+
+    .view-btn.red {
+      background-color: red;
+    }
+
+    .view-btn.red:hover {
+      background-color: rgb(170, 9, 9);
+    }
+
+    .back-link {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .back-link a {
+      color: #b8c1ec;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .back-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
+  <div class="overlay-box">
     <h1>Reservations for Your Rental Shop</h1>
 
     {% if reservations %}
     <table>
-        <thead>
-            <tr>
-                <th>Reservation ID</th>
-                <th>Customer ID</th>
-                <th>From Date</th>
-                <th>To Date</th>
-                <th>Location</th>
-                <th>Time Slot</th>
-                <th>Vehicle No</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for res in reservations %}
-            <tr>
-                <td>{{ res[0] }}</td>
-                <td>{{ res[1] }}</td>
-                <td>{{ res[2] }}</td>
-                <td>{{ res[3] }}</td>
-                <td>{{ res[4] }}</td>
-                <td>{{ res[5] }}</td>
-                <td>{{ res[6] or "Not Assigned" }}</td>
-                <td>
-                    {% if res[6] %}
-                    <a href="{{ url_for('vehicle_info_payment', vehicle_no=res[6]) }}">
-                        <button class="view-btn">View Vehicle</button>
-                    </a>
-                    {% if res[0] in res_payments %}
-                        <a href="{{ url_for('view_payment_reservation', res_id=res[0], rental_id=rental_id) }}">
-                            <button class="view-btn" style="background-color: #6c757d;">View Payment</button>
-                        </a>
-                        {% else %}
-                        <form action="{{ url_for('add_payment_reservation', res_id=res[0]) }}" method="post" style="display:inline;">
-                            <button class="view-btn" style="background-color: #17a2b8;">Add Payment</button>
-                        </form>
-                        <form action="{{ url_for('delete_reservation', res_id=res[0]) }}" method="post" style="display:inline;">
-                            <button class="view-btn" style="background-color: red;">Delete</button>
-                        </form>
-                        {% endif %}
+      <thead>
+        <tr>
+          <th>Reservation ID</th>
+          <th>Customer ID</th>
+          <th>From Date</th>
+          <th>To Date</th>
+          <th>Location</th>
+          <th>Time Slot</th>
+          <th>Vehicle No</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for res in reservations %}
+        <tr>
+          <td>{{ res[0] }}</td>
+          <td>{{ res[1] }}</td>
+          <td>{{ res[2] }}</td>
+          <td>{{ res[3] }}</td>
+          <td>{{ res[4] }}</td>
+          <td>{{ res[5] }}</td>
+          <td>{{ res[6] or "Not Assigned" }}</td>
+          <td>
+            {% if res[6] %}
+              <a href="{{ url_for('vehicle_info_payment', vehicle_no=res[6]) }}">
+                <button class="view-btn">View Vehicle</button>
+              </a>
 
-                    {% else %}
-                    N/A
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
+              {% if res[0] in res_payments %}
+                <a href="{{ url_for('view_payment_reservation', res_id=res[0], rental_id=rental_id) }}">
+                  <button class="view-btn gray">View Payment</button>
+                </a>
+              {% else %}
+                <form action="{{ url_for('add_payment_reservation', res_id=res[0]) }}" method="post" style="display:inline;">
+                  <button class="view-btn blue">Add Payment</button>
+                </form>
+                <form action="{{ url_for('delete_reservation', res_id=res[0]) }}" method="post" style="display:inline;">
+                  <button class="view-btn red">Delete</button>
+                </form>
+              {% endif %}
+            {% else %}
+              N/A
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
     </table>
     {% else %}
-        <p>No reservations found for your rental shop.</p>
+      <p style="text-align:center; font-size: 18px;">No reservations found for your rental shop.</p>
     {% endif %}
-    
+
     <div class="back-link">
-        <a href="{{ url_for('rental_shops') }}">Back to dashboard</a>
+      <a href="{{ url_for('rental_shops') }}">Back to Dashboard</a>
     </div>
+  </div>
 </body>
 </html>
