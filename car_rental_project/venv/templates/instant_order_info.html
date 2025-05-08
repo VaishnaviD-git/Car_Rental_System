@@ -15,53 +15,60 @@
       background: url('https://photographyreference.com/wp-content/uploads/2022/11/long-exposure-photography-car-lights.jpg') no-repeat center center/cover;
       min-height: 100vh;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
-      padding: 30px;
+    }
+
+    nav {
+      width: 100%;
+      padding: 1.2rem 2rem;
+      display: flex;
+      justify-content: flex-end;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 999;
+      background-color: rgba(0, 0, 0, 0.6);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .nav-buttons a {
+      padding: 0.6rem 1.2rem;
+      background-color: #ffb6c1;
+      color: #222;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+
+    .nav-buttons a:hover {
+      background-color: #ff8aa1;
     }
 
     .overlay-box {
-      background-color: rgba(0, 0, 0, 0.65);
+      background-color: rgba(32, 31, 31, 0.65);
       padding: 35px 45px;
       border-radius: 14px;
       max-width: 500px;
       width: 100%;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      margin-top: 300px;
+      box-shadow: 0 8px 24px rgba(95, 95, 95, 0.1);
       animation: slideIn 1s ease;
       color: #ffffff;
       text-align: center;
     }
 
-    h2 {
+    h1 {
       margin-bottom: 20px;
-      color: #62a4d3;
+      color: #8cc0e5;
       font-size: 24px;
     }
 
     p {
       margin: 12px 0;
-      font-size: 16px;
+      font-size: 18px;
       color: #f3e1ff;
-    }
-
-    .delete-btn {
-      margin-top: 25px;
-      padding: 12px 20px;
-      background-color: #ff6b6b;
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      width: 100%;
-      transition: background-color 0.3s ease, transform 0.3s ease;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-    }
-
-    .delete-btn:hover {
-      background-color: #e63946;
-      transform: scale(1.03);
     }
 
     @keyframes slideIn {
@@ -72,14 +79,19 @@
 </head>
 <body>
 
+<!-- Top-right fixed navbar -->
+<nav>
+  <div class="nav-buttons">
+    <a href="{{ url_for('customers') }}">← Back to Dashboard</a>
+  </div>
+</nav>
+
+<!-- Order details box -->
 <div class="overlay-box">
-  <h2>Instant Order #{{ data[0] }}</h2>
+  <h1>Instant Order #{{ data[0] }}</h1>
   <p><strong>Location:</strong> {{ data[2] }}</p>
   <p><strong>Time Slot:</strong> {{ data[3] }}</p>
   <p><strong>Vehicle No:</strong> {{ data[4] or "Not Assigned" }}</p>
-</div><br><br>
-<div class="back-link">
-  <a href="{{ url_for('customers') }}">← Back to Dashboard</a>
 </div>
 
 </body>
